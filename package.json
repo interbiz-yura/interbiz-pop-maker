@@ -9,20 +9,21 @@
     "convert": "node scripts/convert-xlsx.js"
   },
   "dependencies": {
+    "file-saver": "^2.0.5",
+    "jszip": "^3.10.1",
     "next": "14.2.5",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "jszip": "^3.10.1",
-    "file-saver": "^2.0.5"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
-    "@types/file-saver": "^2.0.7",
-    "typescript": "^5",
-    "tailwindcss": "^3.4.1",
+    "autoprefixer": "^10",
     "postcss": "^8",
-    "autoprefixer": "^10"
+    "tailwindcss": "^3.4.1",
+    "typescript": "^5"
   }
 }

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { loadPriceData, loadCards, loadQRMapping, loadCareBenefits } from '@/lib/data-loader';
+import { loadCards, loadQRMapping, loadCareBenefits } from '@/lib/data-loader';
 import {
   getPriorityValue, getCardDiscount, getUniqueCardNames, getUsagesByCard,
   formatNumber
@@ -19,6 +19,75 @@ const TEMPLATES = [
   { id: 'homeplus', name: 'A6 홈플러스 가격표', file: '', pattern: 'B' as const },
   { id: 'traders', name: 'A4/A6 트레이더스 가격표', file: '', pattern: 'B' as const },
 ];
+
+// ==========================================
+// 채널 정의
+// ==========================================
+const CHANNELS = [
+  { id: 'emart', name: '이마트', sheet: '이마트-업데이트' },
+  { id: 'homeplus', name: '홈플러스', sheet: '홈플러스-업데이트' },
+  { id: 'jeonjaland', name: '전자랜드', sheet: '전자랜드-업데이트' },
+];
+
+// ==========================================
+// 엑셀 파서 (SheetJS)
+// ==========================================
+async function parseExcelFromURL(url: string, sheetName: string): Promise<PriceRow[]> {
+  const XLSX = await import('xlsx');
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  const wb = XLSX.read(buf, { type: 'array' });
+  const ws = wb.Sheets[sheetName];
+  if (!ws) return [];
+
+  const rows: PriceRow[] = [];
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+
+  for (let r = 4; r <= range.e.r; r++) { // 5행부터 (0-indexed = 4)
+    const model = ws[XLSX.utils.encode_cell({ r, c: 4 })]?.v; // E열
+    if (!model) continue;
+
+    const num = (c: number) => {
+      const v = ws[XLSX.utils.encode_cell({ r, c })]?.v;
+      return typeof v === 'number' ? v : (parseInt(String(v)) || 0);
+    };
+    const str = (c: number) => {
+      const v = ws[XLSX.utils.encode_cell({ r, c })]?.v;
+      return v != null ? String(v) : '';
+    };
+
+    rows.push({
+      channel: str(0),
+      category: str(3),        // D열
+      model: str(4),           // E열
+      listPrice: num(5),       // F열
+      careType: str(6),        // G열
+      careGrade: str(7),       // H열
+      visitCycle: str(8),      // I열
+      careKey: str(9),         // J열
+      activation: num(10),     // K열
+      y3base: num(11),         // L열 (3년)
+      y4base: num(12),         // M열 (4년 기본)
+      y4new: num(13),          // N열 (4년 신규)
+      y4exist: num(14),        // O열 (4년 기존)
+      y5base: num(15),         // P열 (5년 기본)
+      y5new: num(16),          // Q열 (5년 신규)
+      y5exist: num(17),        // R열 (5년 기존)
+      y6base: num(18),         // S열 (6년 기본) ★
+      y6new: num(19),          // T열 (6년 신규)
+      y6exist: num(20),        // U열 (6년 기존)
+      prepay30amount: num(21), // V열
+      prepay30base: num(22),   // W열
+      prepay30new: num(23),    // X열
+      prepay30exist: num(24),  // Y열
+      prepay50amount: num(25), // Z열
+      prepay50base: num(26),   // AA열
+      prepay50new: num(27),    // AB열
+      prepay50exist: num(28),  // AC열
+    });
+  }
+  return rows;
+}
 
 // ==========================================
 // 카테고리 순서 (ㄱㄴㄷ)
@@ -42,6 +111,7 @@ export default function PopMakerPage() {
   const [error, setError] = useState<string | null>(null);
 
   // ----- UI 상태 -----
+  const [channel, setChannel] = useState(CHANNELS[0]);
   const [template, setTemplate] = useState(TEMPLATES[0]);
   const [cardName, setCardName] = useState('');
   const [monthUsage, setMonthUsage] = useState('');
@@ -51,13 +121,14 @@ export default function PopMakerPage() {
   const [activeCategory, setActiveCategory] = useState('전체');
   const [checkedModels, setCheckedModels] = useState<Set<string>>(new Set());
 
-  // ----- 데이터 로딩 -----
+// ----- 데이터 로딩 -----
   useEffect(() => {
     async function loadAll() {
       try {
         setLoading(true);
+        setError(null);
         const [price, cardData, qr, care] = await Promise.all([
-          loadPriceData('emart'),
+          parseExcelFromURL('/data/price.xlsx', channel.sheet),
           loadCards(),
           loadQRMapping(),
           loadCareBenefits(),
@@ -74,7 +145,7 @@ export default function PopMakerPage() {
       }
     }
     loadAll();
-  }, []);
+  }, [channel]);
 
   // ----- 카테고리별 모델 그룹핑 -----
   const categoryModels = useMemo(() => {
@@ -220,7 +291,15 @@ export default function PopMakerPage() {
             <span className="font-black text-sm text-white" style={{ fontFamily: 'Georgia, serif' }}>LG</span>
           </div>
           <h1 className="text-lg font-extrabold text-gray-900 tracking-tight">POP Maker</h1>
-          <span className="text-xs text-[#A50034] font-bold border-[1.5px] border-[#A50034] px-2 py-0.5 rounded">이마트</span>
+           <select
+            value={channel.id}
+            onChange={e => setChannel(CHANNELS.find(c => c.id === e.target.value) || CHANNELS[0])}
+            className="text-xs text-[#A50034] font-bold border-[1.5px] border-[#A50034] px-2 py-0.5 rounded bg-transparent outline-none cursor-pointer"
+          >
+            {CHANNELS.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
         </div>
         <div className="flex items-center gap-3">
           <span className="text-xs text-gray-400">모델 {totalModels}개 로드</span>
