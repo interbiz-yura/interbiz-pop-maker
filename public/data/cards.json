@@ -1,0 +1,65 @@
+[
+  {
+    "cardName": "롯데카드",
+    "monthUsage": "40만",
+    "discountAmount": 18000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "롯데카드",
+    "monthUsage": "80만",
+    "discountAmount": 22000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "롯데카드",
+    "monthUsage": "160만",
+    "discountAmount": 26000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 160만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "신한카드",
+    "monthUsage": "30만",
+    "discountAmount": 16000,
+    "message": "※ 신한 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "신한카드",
+    "monthUsage": "70만",
+    "discountAmount": 26000,
+    "message": "※ 신한 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "신한카드",
+    "monthUsage": "130만",
+    "discountAmount": 30000,
+    "message": "※ 신한 제휴카드 프로모션 적용, 월 130만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "우리카드",
+    "monthUsage": "30만",
+    "discountAmount": 16000,
+    "message": "※ 우리 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "우리카드",
+    "monthUsage": "70만",
+    "discountAmount": 22000,
+    "message": "※ 우리 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "우리카드",
+    "monthUsage": "120만",
+    "discountAmount": 24000,
+    "message": "※ 우리 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
+    "order": 3
+  }
+]
