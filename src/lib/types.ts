@@ -76,16 +76,29 @@ export interface TemplateQRSettings {
   size_ratio: number;
 }
 
+export interface TemplateBatchSettings {
+  paper_orientation: string;
+  item_width_mm: number;
+  item_height_mm: number;
+  grid_cols: number;
+  grid_rows: number;
+}
+
 export interface Template {
   name: string;
   background_color: string;
+  border_color?: string;
+  border_width?: number;
   background_image: string;
   background_image_base64: string;
+  background_image_format?: string;
   image_size: string;
   size_dimensions: [number, number];
   texts: Record<string, TemplateText>;
   qr_settings?: TemplateQRSettings;
   qr_enabled?: boolean;
+  batch_enabled?: boolean;
+  batch_settings?: TemplateBatchSettings;
 }
 
 // ==========================================

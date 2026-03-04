@@ -1,11 +1,14 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
-import { loadCards, loadQRMapping, loadCareBenefits } from '@/lib/data-loader';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { loadCards, loadQRMapping, loadCareBenefits, loadTemplate } from '@/lib/data-loader';
 import {
-  getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber
+  getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber,
+  calculatePatternB, calculatePatternA
 } from '@/lib/price-engine';
-import type { PriceRow, CardInfo, QRMapping, CareBenefit } from '@/lib/types';
+import { renderTemplate, renderBatch, downloadImage, downloadAllImages, preloadFonts } from '@/lib/template-renderer';
+import { bindAllValues } from '@/lib/data-binder';
+import type { PriceRow, CardInfo, QRMapping, CareBenefit, Template, CalculatedData } from '@/lib/types';
 
 // ==========================================
 // 템플릿 정의
@@ -43,10 +46,16 @@ const CATEGORY_ORDER = [
 async function parseExcelFromURL(url: string, sheetName: string): Promise<PriceRow[]> {
   const XLSX = await import('xlsx');
   const res = await fetch(url);
+  if (!res.ok) throw new Error(`파일 로드 실패: ${url} (${res.status})`);
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('text/html')) throw new Error(`잘못된 응답 (HTML): ${url}`);
   const buf = await res.arrayBuffer();
   const wb = XLSX.read(buf, { type: 'array' });
   const ws = wb.Sheets[sheetName];
-  if (!ws) return [];
+  if (!ws) {
+    console.warn(`[POP] 시트 '${sheetName}'를 찾을 수 없음. 사용 가능: ${wb.SheetNames.join(', ')}`);
+    return [];
+  }
 
   const rows: PriceRow[] = [];
   const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
@@ -120,6 +129,10 @@ export default function PopMakerPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
+  // ----- Price 파일 관리 -----
+  const [priceFiles, setPriceFiles] = useState<string[]>([]);
+  const [selectedPriceFile, setSelectedPriceFile] = useState('');
+
   // ----- UI 상태 -----
   const [channel, setChannel] = useState(CHANNELS[0]);
   const [template, setTemplate] = useState(TEMPLATES[0]);
@@ -131,25 +144,52 @@ export default function PopMakerPage() {
   const [activeCategory, setActiveCategory] = useState('전체');
   const [checkedModels, setCheckedModels] = useState<Set<string>>(new Set());
 
+  // ----- 가격표 생성 상태 -----
+  const [generating, setGenerating] = useState(false);
+  const [generatedImages, setGeneratedImages] = useState<string[]>([]);
+  const [generatedNames, setGeneratedNames] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
+  const [previewIndex, setPreviewIndex] = useState(0);
+  const [genProgress, setGenProgress] = useState({ current: 0, total: 0 });
+
   // ----- 모델별 드롭다운 선택 상태 -----
   // key: 모델명, value: { period, careType, careGrade, visitCycle }
   const [modelSelections, setModelSelections] = useState<Record<string, {
     period: string; careType: string; careGrade: string; visitCycle: string;
   }>>({});
 
-  // ----- 데이터 로딩 -----
+  // ----- price-index.json 로드 (최초 1회) -----
   useEffect(() => {
+    async function loadIndex() {
+      try {
+        const res = await fetch('/data/price-index.json');
+        const files: string[] = await res.json();
+        setPriceFiles(files);
+        if (files.length > 0) setSelectedPriceFile(files[0]); // 최신 파일 자동 선택
+      } catch {
+        console.warn('price-index.json 로드 실패, price.xlsx로 폴백');
+        setPriceFiles(['price.xlsx']);
+        setSelectedPriceFile('price.xlsx');
+      }
+    }
+    loadIndex();
+  }, []);
+
+  // ----- 데이터 로딩 (채널 또는 price 파일 변경 시) -----
+  useEffect(() => {
+    if (!selectedPriceFile) return;
     async function loadAll() {
       try {
         setLoading(true);
         setError(null);
         const [price, cardData, qr, care] = await Promise.all([
-          parseExcelFromURL('/data/price.xlsx', channel.sheet),
+          parseExcelFromURL(`/data/${selectedPriceFile}`, channel.sheet),
           loadCards(),
           loadQRMapping(),
           loadCareBenefits(),
         ]);
         setPriceData(price);
+        console.log(`[POP] ${selectedPriceFile} → ${price.length}행 로드, activation>0: ${price.filter(r => (r.activation||0) > 0).length}개`);
         setCards(cardData);
         setQrMapping(qr);
         setCareBenefits(care);
@@ -163,7 +203,7 @@ export default function PopMakerPage() {
       }
     }
     loadAll();
-  }, [channel]);
+  }, [channel, selectedPriceFile]);
 
   // ----- 모델별 그룹핑 (같은 모델 = 1행, 내부에 여러 PriceRow) -----
   const categoryModelGroups = useMemo(() => {
@@ -236,18 +276,7 @@ export default function PopMakerPage() {
   // ----- 모델의 현재 선택에 해당하는 행 찾기 -----
   const getSelectedRow = useCallback((group: ModelGroup): PriceRow => {
     const sel = modelSelections[group.model];
-  if (!sel) {
-      let minPrice = Infinity;
-      let minRow = group.rows[0];
-      for (const row of group.rows) {
-        const price = row.y6base || row.y5base || row.y4base || row.y3base || 0;
-        if (price > 0 && price < minPrice) {
-          minPrice = price;
-          minRow = row;
-        }
-      }
-      return minRow;
-    }
+    if (!sel) return group.rows[0];
 
     // 케어십형태 → 케어십구분 → 방문주기 순으로 매칭
     let candidates = group.rows;
@@ -314,10 +343,9 @@ export default function PopMakerPage() {
 
   // ----- 가격 계산 -----
   const getCalculatedPrice = useCallback((group: ModelGroup) => {
-    const sel = modelSelections[group.model];
     const row = getSelectedRow(group);
-    const defaultPeriod = row.y6base ? '6년' : row.y5base ? '5년' : row.y4base ? '4년' : row.y3base ? '3년' : '6년';
-    const period = sel?.period || defaultPeriod;
+    const sel = modelSelections[group.model];
+    const period = sel?.period || '6년';
 
     const basePrice = getPriceByPeriod(row, period, activationOn);
     const { discountAmount } = getCardDiscount(cards, cardName, monthUsage);
@@ -365,6 +393,71 @@ export default function PopMakerPage() {
   // ----- 카드 변경 시 월실적 리셋 -----
   useEffect(() => { setMonthUsage(''); }, [cardName]);
 
+  // ----- 가격표 생성 -----
+  const handleGenerate = useCallback(async () => {
+    if (checkedModels.size === 0 || !template.file) return;
+
+    setGenerating(true);
+    setGeneratedImages([]);
+    setGeneratedNames([]);
+    setGenProgress({ current: 0, total: checkedModels.size });
+
+    try {
+      // 1) 템플릿 JSON 로드
+      const tmpl = await loadTemplate(template.file);
+
+      // 2) 선택된 모델들의 CalculatedData 생성
+      const models = Array.from(checkedModels);
+      const allValues: Record<string, string>[] = [];
+      const allNames: string[] = [];
+      const textNames = Object.keys(tmpl.texts);
+
+      for (let i = 0; i < models.length; i++) {
+        const modelName = models[i];
+        setGenProgress({ current: i + 1, total: models.length });
+
+        // 패턴에 따라 계산
+        let calcData: CalculatedData | null = null;
+        if (template.pattern === 'B') {
+          calcData = calculatePatternB(
+            priceData, cards, qrMapping, careBenefits,
+            modelName, cardName, monthUsage, activationOn
+          );
+        } else {
+          calcData = calculatePatternA(
+            priceData, cards,
+            modelName, cardName, monthUsage, activationOn
+          );
+        }
+
+        if (!calcData) continue;
+
+        // name 컨벤션으로 바인딩
+        const values = bindAllValues(textNames, calcData);
+        allValues.push(values);
+        allNames.push(modelName);
+      }
+
+      if (allValues.length === 0) {
+        setGenerating(false);
+        return;
+      }
+
+      // 3) 렌더링
+      const images = await renderBatch(tmpl, allValues);
+
+      setGeneratedImages(images);
+      setGeneratedNames(allNames);
+      setPreviewIndex(0);
+      setShowPreview(true);
+    } catch (e) {
+      console.error('가격표 생성 실패:', e);
+      alert('가격표 생성 중 오류가 발생했습니다.');
+    } finally {
+      setGenerating(false);
+    }
+  }, [checkedModels, template, priceData, cards, qrMapping, careBenefits, cardName, monthUsage, activationOn]);
+
   // ----- 로딩/에러 -----
   if (loading) {
     return (
@@ -408,6 +501,9 @@ export default function PopMakerPage() {
           </select>
         </div>
         <div className="flex items-center gap-3">
+          {selectedPriceFile && (
+            <span className="text-xs text-gray-400">📊 {selectedPriceFile.replace('.xlsx', '').replace('price_', '')}</span>
+          )}
           <span className="text-xs text-gray-400">모델 {totalModels}개 로드</span>
         </div>
       </header>
@@ -499,18 +595,117 @@ export default function PopMakerPage() {
             </Panel>
 
             <button
-              disabled={checkedModels.size === 0}
+              onClick={handleGenerate}
+              disabled={checkedModels.size === 0 || generating || !template.file}
               className="w-full py-3.5 rounded-xl border-none text-base font-bold transition-all"
               style={{
-                background: checkedModels.size > 0 ? 'linear-gradient(135deg, #A50034, #C4003D)' : '#ddd',
-                color: checkedModels.size > 0 ? '#fff' : '#999',
-                cursor: checkedModels.size > 0 ? 'pointer' : 'not-allowed',
-                boxShadow: checkedModels.size > 0 ? '0 4px 16px rgba(165,0,52,0.25)' : 'none',
+                background: (checkedModels.size > 0 && !generating && template.file) ? 'linear-gradient(135deg, #A50034, #C4003D)' : '#ddd',
+                color: (checkedModels.size > 0 && !generating && template.file) ? '#fff' : '#999',
+                cursor: (checkedModels.size > 0 && !generating && template.file) ? 'pointer' : 'not-allowed',
+                boxShadow: (checkedModels.size > 0 && !generating) ? '0 4px 16px rgba(165,0,52,0.25)' : 'none',
               }}
             >
-              🎨 가격표 생성 ({checkedModels.size}개)
+              {generating ? (
+                <span className="flex items-center justify-center gap-2">
+                  <span className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                  생성 중... ({genProgress.current}/{genProgress.total})
+                </span>
+              ) : !template.file ? (
+                '⚠️ 템플릿 미등록'
+              ) : (
+                `🎨 가격표 생성 (${checkedModels.size}개)`
+              )}
             </button>
           </div>
+
+          {/* ========== 미리보기 모달 ========== */}
+          {showPreview && generatedImages.length > 0 && (
+            <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+              onClick={() => setShowPreview(false)}>
+              <div className="bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] flex flex-col overflow-hidden"
+                onClick={e => e.stopPropagation()} style={{ width: 960 }}>
+
+                {/* 모달 헤더 */}
+                <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FAF8F5]">
+                  <div className="flex items-center gap-3">
+                    <h3 className="text-sm font-extrabold text-gray-800">가격표 미리보기</h3>
+                    <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full">
+                      {previewIndex + 1} / {generatedImages.length}
+                      {generatedNames[previewIndex] && ` · ${generatedNames[previewIndex]}`}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {/* 개별 다운로드 */}
+                    <button
+                      onClick={() => downloadImage(
+                        generatedImages[previewIndex],
+                        `${generatedNames[previewIndex] || 'price'}_${previewIndex + 1}.png`
+                      )}
+                      className="text-xs px-3 py-1.5 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors cursor-pointer">
+                      📥 이 이미지 저장
+                    </button>
+                    {/* 전체 다운로드 */}
+                    {generatedImages.length > 1 && (
+                      <button
+                        onClick={() => downloadAllImages(generatedImages, template.name)}
+                        className="text-xs px-3 py-1.5 bg-[#A50034] text-white rounded-lg font-semibold hover:bg-[#8a002c] transition-colors cursor-pointer">
+                        📦 전체 저장 ({generatedImages.length}개)
+                      </button>
+                    )}
+                    {/* 닫기 */}
+                    <button
+                      onClick={() => setShowPreview(false)}
+                      className="w-7 h-7 rounded-full bg-gray-100 text-gray-400 text-sm flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
+                      ✕
+                    </button>
+                  </div>
+                </div>
+
+                {/* 이미지 영역 */}
+                <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-gray-50" style={{ minHeight: 400 }}>
+                  <img
+                    src={generatedImages[previewIndex]}
+                    alt={`가격표 ${previewIndex + 1}`}
+                    className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
+                  />
+                </div>
+
+                {/* 네비게이션 */}
+                {generatedImages.length > 1 && (
+                  <div className="flex items-center justify-center gap-3 px-5 py-3 border-t border-gray-100 bg-[#FAF8F5]">
+                    <button
+                      onClick={() => setPreviewIndex(Math.max(0, previewIndex - 1))}
+                      disabled={previewIndex === 0}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer hover:bg-gray-50 transition-colors">
+                      ◀ 이전
+                    </button>
+
+                    {/* 썸네일 바 */}
+                    <div className="flex gap-1.5 overflow-x-auto max-w-[600px] py-1">
+                      {generatedImages.map((img, i) => (
+                        <button key={i}
+                          onClick={() => setPreviewIndex(i)}
+                          className="shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer"
+                          style={{
+                            borderColor: i === previewIndex ? '#A50034' : 'transparent',
+                            opacity: i === previewIndex ? 1 : 0.5,
+                          }}>
+                          <img src={img} alt="" className="w-12 h-8 object-cover" />
+                        </button>
+                      ))}
+                    </div>
+
+                    <button
+                      onClick={() => setPreviewIndex(Math.min(generatedImages.length - 1, previewIndex + 1))}
+                      disabled={previewIndex === generatedImages.length - 1}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer hover:bg-gray-50 transition-colors">
+                      다음 ▶
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
 
           {/* ========== 우측: 제품 테이블 ========== */}
           <div className="flex-1 flex flex-col min-w-0">
@@ -564,21 +759,22 @@ export default function PopMakerPage() {
                       <div className="flex items-center gap-2 mb-2">
                         <div className="w-[3px] h-[18px] bg-[#A50034] rounded-sm" />
                         <span className="text-base font-extrabold text-gray-900">{cat}</span>
-                        <span className="text-xs text-gray-500 font-semibold">({catGroups.length}개 모델)</span>
+                        <span className="text-xs text-gray-300">({catGroups.length}개)</span>
                         <div className="flex-1" />
+                        <label className="flex items-center gap-1 cursor-pointer">
+                          <input type="checkbox"
+                            checked={catGroups.every(g => checkedModels.has(g.model))}
+                            onChange={() => toggleCatAll(cat)} className="w-3.5 h-3.5 accent-[#A50034]" />
+                          <span className="text-[11px] text-gray-400">전체선택</span>
+                        </label>
                       </div>
 
                       <div className="rounded-xl overflow-hidden border border-gray-100">
                         <table className="w-full border-collapse text-xs" style={{ minWidth: 900 }}>
                           <thead>
                             <tr className="bg-[#FAF8F5]">
-                              <th className="w-9 p-2 border-b-2 border-[#A50034]">
-                                <input type="checkbox"
-                                  checked={catGroups.every(g => checkedModels.has(g.model))}
-                                  onChange={() => toggleCatAll(cat)}
-                                  className="w-4 h-4 accent-[#A50034] cursor-pointer" />
-                              </th>
-                              <th className="w-[160px] p-2 text-left text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">모델명</th>
+                              <th className="w-9 p-2 border-b-2 border-[#A50034]" />
+                              <th className="p-2 text-left text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">모델명</th>
                               <th className="w-[68px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">계약기간</th>
                               <th className="w-[90px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십형태</th>
                               <th className="w-[110px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십구분</th>
@@ -590,7 +786,7 @@ export default function PopMakerPage() {
                             </tr>
                           </thead>
                           <tbody>
-                            {catGroups.map((group, idx) => {
+                            {catGroups.map((group) => {
                               const checked = checkedModels.has(group.model);
                               const calc = getCalculatedPrice(group);
                               const sel = modelSelections[group.model] || { period: '6년', careType: '', careGrade: '', visitCycle: '' };
@@ -606,25 +802,22 @@ export default function PopMakerPage() {
                                     <input type="checkbox" checked={checked} onChange={() => {}} className="w-4 h-4 accent-[#A50034] cursor-pointer" />
                                   </td>
                                   <td className="p-2 font-bold text-[11px] text-gray-700 tracking-tight cursor-pointer" onClick={() => toggleModel(group.model)}
-                                    style={{ fontFamily: "'Inter', sans-serif" }}>
+                                    style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
                                     {group.model}
-                                  </td>
-                                    {/* 계약기간 */}
-                                  <td className="text-center p-2">
-                                    {availPeriods.length === 0 ? (
-                                      <span className="text-[11px] text-gray-400">-</span>
-                                    ) : availPeriods.length === 1 ? (
-                                      <span className="text-[11px] text-gray-700">{availPeriods[0]}</span>
-                                    ) : (
-                                      <select value={sel.period || availPeriods[0]}
-                                        onChange={e => { e.stopPropagation(); updateSelection(group.model, 'period', e.target.value); }}
-                                        onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
-                                        {availPeriods.map(p => (
-                                          <option key={p} value={p}>{p}</option>
-                                        ))}
-                                      </select>
+                                    {group.rows.length > 1 && (
+                                      <span className="ml-1 text-[9px] text-gray-300 font-normal">({group.rows.length})</span>
                                     )}
+                                  </td>
+                                  {/* 계약기간 */}
+                                  <td className="text-center p-2">
+                                    <select value={sel.period || '6년'}
+                                      onChange={e => { e.stopPropagation(); updateSelection(group.model, 'period', e.target.value); }}
+                                      onClick={e => e.stopPropagation()}
+                                      className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
+                                      {['6년', '5년', '4년', '3년'].map(p => (
+                                        <option key={p} value={p} disabled={!availPeriods.includes(p)}>{p}{!availPeriods.includes(p) ? '' : ''}</option>
+                                      ))}
+                                    </select>
                                   </td>
                                   {/* 케어십형태 */}
                                   <td className="text-center p-2">
@@ -634,7 +827,7 @@ export default function PopMakerPage() {
                                       <select value={sel.careType || opts.careTypes[0]}
                                         onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careType', e.target.value); }}
                                         onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
                                         {opts.careTypes.map(ct => <option key={ct} value={ct}>{ct}</option>)}
                                       </select>
                                     )}
@@ -642,12 +835,12 @@ export default function PopMakerPage() {
                                   {/* 케어십구분 */}
                                   <td className="text-center p-2">
                                     {opts.careGrades.length <= 1 ? (
-                                      <span className="text-[11px] text-gray-700">{opts.careGrades[0] || '-'}</span>
+                                      <span className="text-[11px] text-gray-500">{opts.careGrades[0] || '-'}</span>
                                     ) : (
                                       <select value={sel.careGrade || opts.careGrades[0]}
                                         onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careGrade', e.target.value); }}
                                         onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
                                         {opts.careGrades.map(cg => <option key={cg} value={cg}>{cg}</option>)}
                                       </select>
                                     )}
@@ -655,22 +848,21 @@ export default function PopMakerPage() {
                                   {/* 방문주기 */}
                                   <td className="text-center p-2">
                                     {opts.visitCycles.length <= 1 ? (
-                                      <span className="text-[11px] text-gray-700">{opts.visitCycles[0] || '-'}</span>
+                                      <span className="text-[11px] text-gray-500">{opts.visitCycles[0] || '-'}</span>
                                     ) : (
                                       <select value={sel.visitCycle || opts.visitCycles[0]}
                                         onChange={e => { e.stopPropagation(); updateSelection(group.model, 'visitCycle', e.target.value); }}
                                         onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
                                         {opts.visitCycles.map(vc => <option key={vc} value={vc}>{vc}</option>)}
                                       </select>
                                     )}
                                   </td>
                                   {/* 가격 컬럼들 */}
-                                  <td className="text-center p-2 font-semibold text-gray-800">{formatNumber(calc.basePrice)}</td>
+                                  <td className="text-center p-2 font-semibold text-gray-500">{formatNumber(calc.basePrice)}</td>
                                   <td className="text-center p-2 font-semibold" style={{
-                                    color: !activationOn ? '#ccc' : calc.activation > 0 ? '#E67E22' : '#ccc',
-                                    fontWeight: !activationOn ? 400 : calc.activation > 0 ? 700 : 400,
-                                    textDecoration: !activationOn && calc.activation > 0 ? 'line-through' : 'none',
+                                    color: calc.activation > 0 ? '#E67E22' : '#ccc',
+                                    textDecoration: calc.activation === 0 ? 'line-through' : 'none',
                                   }}>{formatNumber(calc.activation)}</td>
                                   <td className="text-center p-2 font-bold text-blue-600">{formatNumber(calc.discountAmount)}</td>
                                   <td className="text-center p-2">
