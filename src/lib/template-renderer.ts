@@ -159,7 +159,7 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
 
     // 폰트 크기: pt → px 변환 (템플릿의 기준 해상도에 맞게)
     // 원본 파이썬에서는 pt를 직접 사용했으므로 비율 유지
-    const fontSizePx = textDef.font_size_pt * (width / 2700); // A6 기준 2700px 대비 비율
+    const fontSizePx = Math.max(8, Math.round(textDef.font_size_pt * 4.0));
     const fontFamily = getCanvasFontFamily(textDef.font_family);
     const spacing = getLetterSpacingPx(textDef.letter_spacing, fontSizePx);
 

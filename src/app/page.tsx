@@ -1,26 +1,25 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
-import { loadCards, loadQRMapping, loadCareBenefits, loadTemplate } from '@/lib/data-loader';
+import { useState, useEffect, useMemo, useCallback } from 'react';
+import { loadCards, loadQRMapping, loadCareBenefits } from '@/lib/data-loader';
 import {
-  getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber,
-  calculatePatternB, calculatePatternA
+  getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber
 } from '@/lib/price-engine';
-import { renderTemplate, renderBatch, downloadImage, downloadAllImages, preloadFonts } from '@/lib/template-renderer';
+import {
+  parseExcelForCompare, comparePriceData,
+  type CompareResult, type ChangeStatus
+} from '@/lib/price-compare';
+import { loadTemplate } from '@/lib/data-loader';
+import { renderBatch, downloadImage, downloadAllImages, preloadFonts } from '@/lib/template-renderer';
 import { bindAllValues } from '@/lib/data-binder';
-import type { PriceRow, CardInfo, QRMapping, CareBenefit, Template, CalculatedData } from '@/lib/types';
+import type { PriceRow, CardInfo, QRMapping, CareBenefit } from '@/lib/types';
 
-// ==========================================
-// 템플릿 정의
-// ==========================================
-const TEMPLATES = [
-  { id: 'A6_이마트_QR코드', name: 'A6 이마트 QR코드', file: 'A6_이마트_QR코드.json', pattern: 'B' as const },
-  { id: 'emart-price', name: '이마트 가격표', file: '', pattern: 'B' as const },
-  { id: 'a4-prepay', name: 'A4 구독 선납 가격표', file: '', pattern: 'A' as const },
-  { id: 'a5-prepay', name: 'A5 구독 선납 가격표', file: '', pattern: 'A' as const },
-  { id: 'homeplus', name: 'A6 홈플러스 가격표', file: '', pattern: 'B' as const },
-  { id: 'traders', name: 'A4/A6 트레이더스 가격표', file: '', pattern: 'B' as const },
-];
+interface TemplateInfo {
+  id: string;
+  name: string;
+  file: string;
+  pattern: 'A' | 'B';
+}
 
 // ==========================================
 // 채널 정의
@@ -107,7 +106,6 @@ function getPriceByPeriod(row: PriceRow, period: string, activationOn: boolean):
   return base;
 }
 
-// 해당 행에서 사용 가능한 계약기간 목록
 function getAvailablePeriods(row: PriceRow): string[] {
   const periods: string[] = [];
   if (row.y6base && row.y6base > 0) periods.push('6년');
@@ -116,6 +114,22 @@ function getAvailablePeriods(row: PriceRow): string[] {
   if (row.y3base && row.y3base > 0) periods.push('3년');
   return periods;
 }
+
+function formatDateStr(d: string): string {
+  if (d.length !== 6) return d;
+  return `20${d.slice(0,2)}.${d.slice(2,4)}.${d.slice(4,6)}`;
+}
+
+// 변동 상태 설정
+const STATUS_CONFIG: Record<ChangeStatus, { color: string; bg: string; label: string; border: string }> = {
+  new:     { color: '#16A34A', bg: '#F0FDF4', label: '신규', border: '#BBF7D0' },
+  down:    { color: '#2563EB', bg: '#EFF6FF', label: '인하', border: '#BFDBFE' },
+  up:      { color: '#EA580C', bg: '#FFF7ED', label: '인상', border: '#FED7AA' },
+  deleted: { color: '#9CA3AF', bg: '#F9FAFB', label: '삭제', border: '#E5E7EB' },
+};
+
+// 상태 순서
+const STATUS_ORDER: ChangeStatus[] = ['new', 'down', 'up', 'deleted'];
 
 // ==========================================
 // 메인 컴포넌트
@@ -129,13 +143,10 @@ export default function PopMakerPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // ----- Price 파일 관리 -----
-  const [priceFiles, setPriceFiles] = useState<string[]>([]);
-  const [selectedPriceFile, setSelectedPriceFile] = useState('');
-
   // ----- UI 상태 -----
   const [channel, setChannel] = useState(CHANNELS[0]);
-  const [template, setTemplate] = useState(TEMPLATES[0]);
+  const [priceDates, setPriceDates] = useState<string[]>([]);
+  const [latestDate, setLatestDate] = useState('');
   const [cardName, setCardName] = useState('');
   const [monthUsage, setMonthUsage] = useState('');
   const [activationOn, setActivationOn] = useState(false);
@@ -143,6 +154,21 @@ export default function PopMakerPage() {
   const [prepay, setPrepay] = useState('없음');
   const [activeCategory, setActiveCategory] = useState('전체');
   const [checkedModels, setCheckedModels] = useState<Set<string>>(new Set());
+  const [templateThumb, setTemplateThumb] = useState<string>('');
+  const [templateBatch, setTemplateBatch] = useState<any>(null);
+
+  // ----- 모델별 드롭다운 선택 상태 -----
+  const [modelSelections, setModelSelections] = useState<Record<string, {
+    period: string; careType: string; careGrade: string; visitCycle: string;
+  }>>({});
+
+  // ----- 변동 제품 상태 -----
+  const [compareResult, setCompareResult] = useState<CompareResult | null>(null);
+  const [compareLoading, setCompareLoading] = useState(false);
+  const [selectedCompareDate, setSelectedCompareDate] = useState('');
+  const [changeFilter, setChangeFilter] = useState<'all' | ChangeStatus>('all');
+  // 삭제 모델용: 이전 엑셀의 PriceRow 데이터
+  const [prevPriceData, setPrevPriceData] = useState<PriceRow[]>([]);
 
   // ----- 가격표 생성 상태 -----
   const [generating, setGenerating] = useState(false);
@@ -152,62 +178,134 @@ export default function PopMakerPage() {
   const [previewIndex, setPreviewIndex] = useState(0);
   const [genProgress, setGenProgress] = useState({ current: 0, total: 0 });
 
-  // ----- 모델별 드롭다운 선택 상태 -----
-  // key: 모델명, value: { period, careType, careGrade, visitCycle }
-  const [modelSelections, setModelSelections] = useState<Record<string, {
-    period: string; careType: string; careGrade: string; visitCycle: string;
-  }>>({});
+  // ----- 캘린더 상태 -----
+  const [calendarMonth, setCalendarMonth] = useState<Date>(new Date());
+  const [showCalendar, setShowCalendar] = useState(false);
 
-  // ----- price-index.json 로드 (최초 1회) -----
-  useEffect(() => {
-    async function loadIndex() {
-      try {
-        const res = await fetch('/data/price-index.json');
-        const files: string[] = await res.json();
-        setPriceFiles(files);
-        if (files.length > 0) setSelectedPriceFile(files[0]); // 최신 파일 자동 선택
-      } catch {
-        console.warn('price-index.json 로드 실패, price.xlsx로 폴백');
-        setPriceFiles(['price.xlsx']);
-        setSelectedPriceFile('price.xlsx');
-      }
-    }
-    loadIndex();
-  }, []);
+  const [templates, setTemplates] = useState<TemplateInfo[]>([]);
+  const [template, setTemplate] = useState<TemplateInfo>({ id: '', name: '', file: '', pattern: 'B' });
 
-  // ----- 데이터 로딩 (채널 또는 price 파일 변경 시) -----
+  const [showPrintDialog, setShowPrintDialog] = useState(false);
+  const [printSize, setPrintSize] = useState<'기본' | 'A4' | 'A5' | 'A6'>('기본');
+  const [printOrientation, setPrintOrientation] = useState<'가로' | '세로'>('가로');
+
+  // ----- 데이터 로딩 -----
   useEffect(() => {
-    if (!selectedPriceFile) return;
     async function loadAll() {
       try {
         setLoading(true);
         setError(null);
+
+        // price-index.json에서 파일 목록 로드
+        let dates: string[] = [];
+        try {
+          const indexRes = await fetch('/data/price-index.json');
+          const files: string[] = await indexRes.json();
+          // 파일명에서 날짜 추출: price_260303.xlsx → 260303
+          dates = files.map(f => f.replace('price_', '').replace('.xlsx', '')).sort();
+        } catch {
+          console.warn('price-index.json 로드 실패');
+        }
+        setPriceDates(dates);
+
+        const latest = dates[dates.length - 1] || '';
+        setLatestDate(latest);
+        if (!latest) throw new Error('가격표 파일이 없습니다.');
+
         const [price, cardData, qr, care] = await Promise.all([
-          parseExcelFromURL(`/data/${selectedPriceFile}`, channel.sheet),
+          parseExcelFromURL(`/data/price_${latest}.xlsx`, channel.sheet),
           loadCards(),
           loadQRMapping(),
           loadCareBenefits(),
         ]);
         setPriceData(price);
-        console.log(`[POP] ${selectedPriceFile} → ${price.length}행 로드, activation>0: ${price.filter(r => (r.activation||0) > 0).length}개`);
+        console.log(`[POP] price_${latest}.xlsx → ${price.length}행 로드, activation>0: ${price.filter(r => (r.activation||0) > 0).length}개`);
         setCards(cardData);
         setQrMapping(qr);
         setCareBenefits(care);
         setModelSelections({});
         setCheckedModels(new Set());
+        setCompareResult(null);
+        setSelectedCompareDate('');
+        setPrevPriceData([]);
       } catch (e) {
         setError('데이터를 불러오는데 실패했습니다.');
         console.error(e);
       } finally {
         setLoading(false);
       }
+
+      // price-index.json 로드 코드 아래에
+      try {
+        const tmplRes = await fetch('/data/templates/template-index.json');
+        const tmplList: TemplateInfo[] = await tmplRes.json();
+        setTemplates(tmplList);
+        if (tmplList.length > 0 && !template.file) setTemplate(tmplList[0]);
+      } catch {
+        console.warn('template-index.json 로드 실패');
+      }
     }
     loadAll();
-  }, [channel, selectedPriceFile]);
+  }, [channel]);
 
-  // ----- 모델별 그룹핑 (같은 모델 = 1행, 내부에 여러 PriceRow) -----
+
+  useEffect(() => {
+    if (!template.file) { setTemplateThumb(''); return; }
+    (async () => {
+      try {
+        const res = await fetch(`/data/templates/${template.file}`);
+        const json = await res.json();
+        console.log('[THUMB] keys:', Object.keys(json));
+        console.log('[THUMB] has background_image:', !!json.background_image);
+        console.log('[THUMB] format:', json.background_image_format);
+        console.log('[THUMB] base64 length:', json.background_image?.length);
+        console.log('[THUMB] value:', json.background_image);
+        console.log('[THUMB] keys:', Object.keys(json).join(', '));
+        if (json.background_image_base64) {
+          const fmt = (json.background_image_format || 'png').replace('.', '');
+          const binary = atob(json.background_image_base64);
+          const bytes = new Uint8Array(binary.length);
+          for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+          const blob = new Blob([bytes], { type: `image/${fmt}` });
+          const url = URL.createObjectURL(blob);
+          console.log('[THUMB] blob url:', url);
+          setTemplateBatch(json.batch_settings || null);
+          setTemplateThumb(url);
+        } else {
+          setTemplateThumb('');
+        }
+      } catch (e) { console.error('[THUMB] error:', e); setTemplateThumb(''); }
+    })();
+  }, [template]);
+
+  // ----- 변동 비교 실행 -----
+  const runCompare = useCallback(async (oldDate: string) => {
+    if (!latestDate || oldDate === latestDate) return;
+    try {
+      setCompareLoading(true);
+      setSelectedCompareDate(oldDate);
+
+      // 비교 엔진용 파싱 + 삭제 모델 표시용 전체 PriceRow 파싱
+      const [prevRowsCompare, currRowsCompare, prevFull] = await Promise.all([
+        parseExcelForCompare(`/data/price_${oldDate}.xlsx`, channel.sheet),
+        parseExcelForCompare(`/data/price_${latestDate}.xlsx`, channel.sheet),
+        parseExcelFromURL(`/data/price_${oldDate}.xlsx`, channel.sheet),
+      ]);
+
+      const result = comparePriceData(prevRowsCompare, currRowsCompare);
+      setCompareResult(result);
+      setPrevPriceData(prevFull);
+      setChangeFilter('all');
+    } catch (e) {
+      console.error('비교 실패:', e);
+      setCompareResult(null);
+    } finally {
+      setCompareLoading(false);
+    }
+  }, [latestDate, channel.sheet]);
+
+  // ----- 모델별 그룹핑 -----
   const categoryModelGroups = useMemo(() => {
-    // 1) 모델별로 모든 행 수집
     const modelMap: Record<string, PriceRow[]> = {};
     const modelCategory: Record<string, string> = {};
     for (const row of priceData) {
@@ -221,7 +319,6 @@ export default function PopMakerPage() {
       modelMap[model].push(row);
     }
 
-    // 2) 카테고리별 ModelGroup 생성
     const groups: Record<string, ModelGroup[]> = {};
     for (const [model, rows] of Object.entries(modelMap)) {
       const cat = modelCategory[model];
@@ -229,7 +326,6 @@ export default function PopMakerPage() {
       groups[cat].push({ model, category: cat, rows });
     }
 
-    // 3) ㄱㄴㄷ 순서 정렬 + 나머지
     const sorted: Record<string, ModelGroup[]> = {};
     for (const cat of CATEGORY_ORDER) {
       if (groups[cat]) sorted[cat] = groups[cat];
@@ -239,6 +335,18 @@ export default function PopMakerPage() {
     }
     return sorted;
   }, [priceData]);
+
+  // ----- 이전 데이터 모델 그룹핑 (삭제 모델용) -----
+  const prevModelGroups = useMemo(() => {
+    const map: Record<string, ModelGroup> = {};
+    for (const row of prevPriceData) {
+      const model = row.model?.trim();
+      if (!model) continue;
+      if (!map[model]) map[model] = { model, category: row.category?.trim() || '', rows: [] };
+      map[model].rows.push(row);
+    }
+    return map;
+  }, [prevPriceData]);
 
   // ----- 카테고리 목록 -----
   const categories = useMemo(() => Object.keys(categoryModelGroups), [categoryModelGroups]);
@@ -258,6 +366,59 @@ export default function PopMakerPage() {
     [activationModelGroups]
   );
 
+  // ----- 변동 제품 카운트 -----
+  const changeCount = useMemo(() => compareResult?.summary.totalChanges || 0, [compareResult]);
+
+  // ----- 변동 제품: 상태별 그룹 데이터 (기존 테이블 형태로) -----
+  const changeTableData = useMemo(() => {
+    if (!compareResult) return [];
+
+    const result: { status: ChangeStatus; label: string; groups: ModelGroup[]; isDeleted: boolean }[] = [];
+
+    for (const status of STATUS_ORDER) {
+      let modelNames: Set<string>;
+      switch (status) {
+        case 'new': modelNames = compareResult.newModels; break;
+        case 'down': modelNames = compareResult.priceDownModels; break;
+        case 'up': modelNames = compareResult.priceUpModels; break;
+        case 'deleted': modelNames = compareResult.deletedModels; break;
+      }
+
+      if (modelNames.size === 0) continue;
+
+      const groups: ModelGroup[] = [];
+      for (const model of Array.from(modelNames)) {
+        if (status === 'deleted') {
+          // 삭제 모델 → 이전 데이터
+          const prev = prevModelGroups[model];
+          if (prev) groups.push(prev);
+        } else {
+          // 신규/인하/인상 → 현재 데이터
+          const allCurrGroups = Object.values(categoryModelGroups).flat();
+          const found = allCurrGroups.find(g => g.model === model);
+          if (found) groups.push(found);
+        }
+      }
+
+      if (groups.length > 0) {
+        result.push({
+          status,
+          label: STATUS_CONFIG[status].label,
+          groups,
+          isDeleted: status === 'deleted',
+        });
+      }
+    }
+
+    return result;
+  }, [compareResult, categoryModelGroups, prevModelGroups]);
+
+  // ----- 필터 적용된 변동 테이블 -----
+  const filteredChangeTableData = useMemo(() => {
+    if (changeFilter === 'all') return changeTableData;
+    return changeTableData.filter(s => s.status === changeFilter);
+  }, [changeTableData, changeFilter]);
+
   // ----- 필터된 데이터 -----
   const filteredData = useMemo(() => {
     if (activeCategory === '전체') return categoryModelGroups;
@@ -276,11 +437,20 @@ export default function PopMakerPage() {
   // ----- 모델의 현재 선택에 해당하는 행 찾기 -----
   const getSelectedRow = useCallback((group: ModelGroup): PriceRow => {
     const sel = modelSelections[group.model];
-    if (!sel) return group.rows[0];
+    if (!sel) {
+      let minPrice = Infinity;
+      let minRow = group.rows[0];
+      for (const row of group.rows) {
+        const price = row.y6base || row.y5base || row.y4base || row.y3base || 0;
+        if (price > 0 && price < minPrice) {
+          minPrice = price;
+          minRow = row;
+        }
+      }
+      return minRow;
+    }
 
-    // 케어십형태 → 케어십구분 → 방문주기 순으로 매칭
     let candidates = group.rows;
-
     if (sel.careType) {
       const filtered = candidates.filter(r => r.careType === sel.careType);
       if (filtered.length > 0) candidates = filtered;
@@ -293,7 +463,6 @@ export default function PopMakerPage() {
       const filtered = candidates.filter(r => r.visitCycle === sel.visitCycle);
       if (filtered.length > 0) candidates = filtered;
     }
-
     return candidates[0];
   }, [modelSelections]);
 
@@ -301,10 +470,8 @@ export default function PopMakerPage() {
   const getDropdownOptions = useCallback((group: ModelGroup) => {
     const sel = modelSelections[group.model] || {};
 
-    // 케어십형태: 모델의 모든 행에서 유니크
     const careTypes = Array.from(new Set(group.rows.map(r => r.careType).filter(Boolean)));
 
-    // 케어십구분: 선택된 케어십형태에 해당하는 행에서 유니크
     let careGradeRows = group.rows;
     if (sel.careType) {
       const f = careGradeRows.filter(r => r.careType === sel.careType);
@@ -312,7 +479,6 @@ export default function PopMakerPage() {
     }
     const careGrades = Array.from(new Set(careGradeRows.map(r => r.careGrade).filter(Boolean)));
 
-    // 방문주기: 선택된 케어십형태 + 구분에 해당하는 행에서 유니크
     let visitRows = careGradeRows;
     if (sel.careGrade) {
       const f = visitRows.filter(r => r.careGrade === sel.careGrade);
@@ -329,7 +495,6 @@ export default function PopMakerPage() {
       const current = prev[model] || { period: '6년', careType: '', careGrade: '', visitCycle: '' };
       const next = { ...current, [field]: value };
 
-      // 연쇄 리셋: 상위 변경 시 하위 초기화
       if (field === 'careType') {
         next.careGrade = '';
         next.visitCycle = '';
@@ -343,9 +508,10 @@ export default function PopMakerPage() {
 
   // ----- 가격 계산 -----
   const getCalculatedPrice = useCallback((group: ModelGroup) => {
-    const row = getSelectedRow(group);
     const sel = modelSelections[group.model];
-    const period = sel?.period || '6년';
+    const row = getSelectedRow(group);
+    const defaultPeriod = row.y6base ? '6년' : row.y5base ? '5년' : row.y4base ? '4년' : row.y3base ? '3년' : '6년';
+    const period = sel?.period || defaultPeriod;
 
     const basePrice = getPriceByPeriod(row, period, activationOn);
     const { discountAmount } = getCardDiscount(cards, cardName, monthUsage);
@@ -390,73 +556,144 @@ export default function PopMakerPage() {
     });
   }, [filteredData, checkedModels]);
 
+  // ----- 변동 제품 전체선택 (삭제 제외) -----
+  const toggleAllChanges = useCallback(() => {
+    const selectableGroups = filteredChangeTableData
+      .filter(s => !s.isDeleted)
+      .flatMap(s => s.groups);
+    const allChecked = selectableGroups.every(g => checkedModels.has(g.model));
+    setCheckedModels(prev => {
+      const next = new Set(prev);
+      selectableGroups.forEach(g => allChecked ? next.delete(g.model) : next.add(g.model));
+      return next;
+    });
+  }, [filteredChangeTableData, checkedModels]);
+
+  // ----- 변동 상태별 전체선택 -----
+  const toggleStatusAll = useCallback((status: ChangeStatus) => {
+    if (status === 'deleted') return; // 삭제는 선택 불가
+    const section = changeTableData.find(s => s.status === status);
+    if (!section) return;
+    const allChecked = section.groups.every(g => checkedModels.has(g.model));
+    setCheckedModels(prev => {
+      const next = new Set(prev);
+      section.groups.forEach(g => allChecked ? next.delete(g.model) : next.add(g.model));
+      return next;
+    });
+  }, [changeTableData, checkedModels]);
+
   // ----- 카드 변경 시 월실적 리셋 -----
   useEffect(() => { setMonthUsage(''); }, [cardName]);
 
   // ----- 가격표 생성 -----
   const handleGenerate = useCallback(async () => {
-    if (checkedModels.size === 0 || !template.file) return;
+      if (checkedModels.size === 0 || !template.file) return;
+      setGenerating(true);
+      setGeneratedImages([]);
+      setGeneratedNames([]);
+      setGenProgress({ current: 0, total: checkedModels.size });
+      try {
+        const tmpl = await loadTemplate(template.file);
+        const models = Array.from(checkedModels);
+        const allValues: Record<string, string>[] = [];
+        const allNames: string[] = [];
+        const textNames = Object.keys(tmpl.texts || {});
+        const allGroups = Object.values(categoryModelGroups).flat();
 
-    setGenerating(true);
-    setGeneratedImages([]);
-    setGeneratedNames([]);
-    setGenProgress({ current: 0, total: checkedModels.size });
+        // 카드 할인 정보
+        const { discountAmount, message: cardMsg } = getCardDiscount(cards, cardName, monthUsage);
 
-    try {
-      // 1) 템플릿 JSON 로드
-      const tmpl = await loadTemplate(template.file);
+        for (let i = 0; i < models.length; i++) {
+          const modelName = models[i];
+          setGenProgress({ current: i + 1, total: models.length });
 
-      // 2) 선택된 모델들의 CalculatedData 생성
-      const models = Array.from(checkedModels);
-      const allValues: Record<string, string>[] = [];
-      const allNames: string[] = [];
-      const textNames = Object.keys(tmpl.texts);
+          // 모델 그룹 찾기
+          const group = allGroups.find(g => g.model === modelName);
+          if (!group) continue;
 
-      for (let i = 0; i < models.length; i++) {
-        const modelName = models[i];
-        setGenProgress({ current: i + 1, total: models.length });
+          // 선택된 행 & 가격 계산
+          const row = getSelectedRow(group);
+          const sel = modelSelections[modelName];
+          const defaultPeriod = row.y6base ? '6년' : row.y5base ? '5년' : row.y4base ? '4년' : '3년';
+          const period = sel?.period || defaultPeriod;
+          const basePrice = getPriceByPeriod(row, period, activationOn);
+          const finalPrice = Math.max(0, basePrice - discountAmount);
+          const dailyPrice = finalPrice > 0 ? Math.round(finalPrice / 31) : 0;
 
-        // 패턴에 따라 계산
-        let calcData: CalculatedData | null = null;
-        if (template.pattern === 'B') {
-          calcData = calculatePatternB(
-            priceData, cards, qrMapping, careBenefits,
-            modelName, cardName, monthUsage, activationOn
-          );
-        } else {
-          calcData = calculatePatternA(
-            priceData, cards,
-            modelName, cardName, monthUsage, activationOn
-          );
+          // 케어서비스 혜택 찾기
+          const careKey = row.careKey || '';
+          const careBenefit = careBenefits.find(cb => cb.careKey === careKey);
+          const benefits = careBenefit?.benefits || ['', '', '', ''];
+
+          // QR코드
+          const qrCode = qrMapping[modelName] || '';
+
+          // CalculatedData 생성
+          const calcData = {
+            model: modelName,
+            category: row.category || '',
+            listPrice: row.listPrice || 0,
+            basePrice,
+            discountAmount,
+            discountPrice: finalPrice,
+            dailyPrice,
+            prepay30amount: row.prepay30amount || 0,
+            prepay30monthly: row.prepay30base ? Math.max(0, row.prepay30base - discountAmount) : 0,
+            prepay50amount: row.prepay50amount || 0,
+            prepay50monthly: row.prepay50base ? Math.max(0, row.prepay50base - discountAmount) : 0,
+            cardMessage: cardMsg,
+            qrCode,
+            benefits,
+            careKey,
+          };
+
+          const values = bindAllValues(textNames, calcData);
+          allValues.push(values);
+          allNames.push(modelName);
         }
+        if (allValues.length === 0) { setGenerating(false); return; }
 
-        if (!calcData) continue;
+        // 출력 설정 오버라이드
+        if (printSize !== '기본') {
+          const sizeConfig = {
+            'A4': { cols: 1, rows: 1, w_mm: 297, h_mm: 210 },
+            'A5': { cols: printOrientation === '가로' ? 2 : 1, rows: printOrientation === '가로' ? 1 : 2, w_mm: 148, h_mm: 210 },
+            'A6': { cols: 2, rows: 2, w_mm: 148, h_mm: 105 },
+          }[printSize];
 
-        // name 컨벤션으로 바인딩
-        const values = bindAllValues(textNames, calcData);
-        allValues.push(values);
-        allNames.push(modelName);
-      }
-
-      if (allValues.length === 0) {
+          tmpl.batch_enabled = true;
+          tmpl.batch_settings = {
+            paper_orientation: printOrientation,
+            item_width_mm: sizeConfig.w_mm,
+            item_height_mm: sizeConfig.h_mm,
+            grid_cols: sizeConfig.cols,
+            grid_rows: sizeConfig.rows,
+          };
+        } else {
+          if (tmpl.batch_settings) {
+            tmpl.batch_settings.paper_orientation = printOrientation;
+          }
+        }
+        console.log('[GEN] batch:', printSize, printOrientation, tmpl.batch_settings);
+        const images = await renderBatch(tmpl, allValues);
+        setGeneratedImages(images);
+        setGeneratedNames(allNames);
+        setPreviewIndex(0);
+        setShowPreview(true);
+      } catch (e) {
+        console.error('가격표 생성 실패:', e);
+        alert('가격표 생성 중 오류가 발생했습니다.');
+      } finally {
         setGenerating(false);
-        return;
       }
+    }, [checkedModels, template, categoryModelGroups, getSelectedRow, modelSelections, activationOn, cards, cardName, monthUsage, careBenefits, qrMapping, printSize, printOrientation]);
+    // ----- 비교 가능한 과거 날짜 (최신 제외) -----
+    const comparableDates = useMemo(
+      () => priceDates.filter(d => d !== latestDate),
+      [priceDates, latestDate]
+      
+    );
 
-      // 3) 렌더링
-      const images = await renderBatch(tmpl, allValues);
-
-      setGeneratedImages(images);
-      setGeneratedNames(allNames);
-      setPreviewIndex(0);
-      setShowPreview(true);
-    } catch (e) {
-      console.error('가격표 생성 실패:', e);
-      alert('가격표 생성 중 오류가 발생했습니다.');
-    } finally {
-      setGenerating(false);
-    }
-  }, [checkedModels, template, priceData, cards, qrMapping, careBenefits, cardName, monthUsage, activationOn]);
 
   // ----- 로딩/에러 -----
   if (loading) {
@@ -481,6 +718,164 @@ export default function PopMakerPage() {
     );
   }
 
+  // ==========================================
+  // 테이블 행 렌더링 함수 (공통)
+  // ==========================================
+  function renderModelRow(group: ModelGroup, options: {
+    disabled?: boolean;
+    statusBadge?: ChangeStatus;
+    showChange?: boolean;
+  } = {}) {
+    const { disabled = false, statusBadge, showChange = false } = options;
+    const checked = checkedModels.has(group.model);
+    const calc = getCalculatedPrice(group);
+    const sel = modelSelections[group.model] || { period: '6년', careType: '', careGrade: '', visitCycle: '' };
+    const opts = getDropdownOptions(group);
+    const selectedRow = getSelectedRow(group);
+    const availPeriods = getAvailablePeriods(selectedRow);
+
+    // 변동 정보
+    const changeInfo = compareResult?.modelChanges.get(group.model);
+
+    return (
+      <tr key={group.model}
+        className="border-t border-gray-50 transition-all"
+        style={{
+          background: disabled ? '#f5f5f5' : checked ? '#fff' : '#fafafa',
+          opacity: disabled ? 0.45 : checked ? 1 : 0.5,
+        }}>
+        {/* 체크박스 */}
+        <td className="text-center p-2">
+          {disabled ? (
+            <span className="text-gray-300 text-xs">—</span>
+          ) : (
+            <div className="cursor-pointer" onClick={() => toggleModel(group.model)}>
+              <input type="checkbox" checked={checked} onChange={() => {}} className="w-4 h-4 accent-[#A50034] cursor-pointer" />
+            </div>
+          )}
+        </td>
+        {/* 모델명 + 상태 뱃지 */}
+        <td className={`p-2 font-bold text-[11px] tracking-tight ${disabled ? '' : 'cursor-pointer'}`}
+          onClick={() => !disabled && toggleModel(group.model)}
+          style={{ fontFamily: "'Inter', sans-serif", color: disabled ? '#aaa' : '#374151' }}>
+          <div className="flex items-center gap-1.5">
+            {group.model}
+            {statusBadge && (
+              <span className="text-[9px] font-bold px-1.5 py-0.5 rounded-full shrink-0"
+                style={{ background: STATUS_CONFIG[statusBadge].bg, color: STATUS_CONFIG[statusBadge].color, border: `1px solid ${STATUS_CONFIG[statusBadge].border}` }}>
+                {STATUS_CONFIG[statusBadge].label}
+              </span>
+            )}
+          </div>
+        </td>
+        {/* 계약기간 */}
+        <td className="text-center p-2">
+          {availPeriods.length === 0 ? (
+            <span className="text-[11px] text-gray-400">-</span>
+          ) : availPeriods.length === 1 ? (
+            <span className="text-[11px]" style={{ color: disabled ? '#bbb' : '#374151' }}>{availPeriods[0]}</span>
+          ) : (
+            <select value={sel.period || availPeriods[0]}
+              disabled={disabled}
+              onChange={e => { e.stopPropagation(); updateSelection(group.model, 'period', e.target.value); }}
+              onClick={e => e.stopPropagation()}
+              className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+              {availPeriods.map(p => <option key={p} value={p}>{p}</option>)}
+            </select>
+          )}
+        </td>
+        {/* 케어십형태 */}
+        <td className="text-center p-2">
+          {opts.careTypes.length <= 1 ? (
+            <span className="text-[11px]" style={{ color: disabled ? '#bbb' : '#6B7280' }}>{opts.careTypes[0] || '-'}</span>
+          ) : (
+            <select value={sel.careType || opts.careTypes[0]}
+              disabled={disabled}
+              onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careType', e.target.value); }}
+              onClick={e => e.stopPropagation()}
+              className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+              {opts.careTypes.map(ct => <option key={ct} value={ct}>{ct}</option>)}
+            </select>
+          )}
+        </td>
+        {/* 케어십구분 */}
+        <td className="text-center p-2">
+          {opts.careGrades.length <= 1 ? (
+            <span className="text-[11px]" style={{ color: disabled ? '#bbb' : '#374151' }}>{opts.careGrades[0] || '-'}</span>
+          ) : (
+            <select value={sel.careGrade || opts.careGrades[0]}
+              disabled={disabled}
+              onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careGrade', e.target.value); }}
+              onClick={e => e.stopPropagation()}
+              className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+              {opts.careGrades.map(cg => <option key={cg} value={cg}>{cg}</option>)}
+            </select>
+          )}
+        </td>
+        {/* 방문주기 */}
+        <td className="text-center p-2">
+          {opts.visitCycles.length <= 1 ? (
+            <span className="text-[11px]" style={{ color: disabled ? '#bbb' : '#374151' }}>{opts.visitCycles[0] || '-'}</span>
+          ) : (
+            <select value={sel.visitCycle || opts.visitCycles[0]}
+              disabled={disabled}
+              onChange={e => { e.stopPropagation(); updateSelection(group.model, 'visitCycle', e.target.value); }}
+              onClick={e => e.stopPropagation()}
+              className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full text-gray-700">
+              {opts.visitCycles.map(vc => <option key={vc} value={vc}>{vc}</option>)}
+            </select>
+          )}
+        </td>
+        {/* 정상구독료 */}
+        <td className="text-center p-2 font-semibold" style={{ color: disabled ? '#bbb' : '#1F2937' }}>
+          {formatNumber(calc.basePrice)}
+        </td>
+        {/* 활성화 */}
+        <td className="text-center p-2 font-semibold" style={{
+          color: disabled ? '#ddd' : !activationOn ? '#ccc' : calc.activation > 0 ? '#E67E22' : '#ccc',
+          fontWeight: disabled || !activationOn ? 400 : calc.activation > 0 ? 700 : 400,
+          textDecoration: !disabled && !activationOn && calc.activation > 0 ? 'line-through' : 'none',
+        }}>{formatNumber(calc.activation)}</td>
+        {/* 카드혜택 */}
+        <td className="text-center p-2 font-bold" style={{ color: disabled ? '#bbb' : '#2563EB' }}>
+          {formatNumber(calc.discountAmount)}
+        </td>
+        {/* 월구독료 */}
+        <td className="text-center p-2">
+          <span className="font-extrabold text-sm" style={{ color: disabled ? '#bbb' : '#A50034' }}>
+            {formatNumber(calc.discountPrice)}
+          </span>
+          <div className="text-[9px] mt-0.5" style={{ color: disabled ? '#ccc' : '#9CA3AF' }}>
+            일 {formatNumber(calc.dailyPrice)}원
+          </div>
+        </td>
+        {/* 변동 정보 (변동 제품 탭에서만) */}
+        {showChange && (
+          <td className="text-center p-2">
+            {changeInfo && (changeInfo.mainDiff !== 0) ? (
+              <div>
+                <span className="text-[10px] font-bold" style={{
+                  color: changeInfo.mainDiff < 0 ? '#2563EB' : '#EA580C'
+                }}>
+                  {changeInfo.mainDiff > 0 ? '+' : ''}{formatNumber(changeInfo.mainDiff)}원
+                </span>
+                <div className="text-[9px] text-gray-400 mt-0.5">
+                  {formatNumber(changeInfo.mainPrevPrice)} → {formatNumber(changeInfo.mainCurrPrice)}
+                </div>
+              </div>
+            ) : statusBadge === 'new' ? (
+              <span className="text-[10px] font-bold text-green-600">NEW</span>
+            ) : statusBadge === 'deleted' ? (
+              <span className="text-[10px] font-bold text-gray-400">삭제됨</span>
+            ) : (
+              <span className="text-gray-300">-</span>
+            )}
+          </td>
+        )}
+      </tr>
+    );
+  }
+
   return (
     <div className="min-h-screen flex flex-col bg-[#f4f3f0]">
       {/* ========== 헤더 ========== */}
@@ -495,15 +890,12 @@ export default function PopMakerPage() {
             onChange={e => setChannel(CHANNELS.find(c => c.id === e.target.value) || CHANNELS[0])}
             className="text-xs text-[#A50034] font-bold border-[1.5px] border-[#A50034] px-2 py-0.5 rounded bg-transparent outline-none cursor-pointer"
           >
-            {CHANNELS.map(c => (
-              <option key={c.id} value={c.id}>{c.name}</option>
-            ))}
+            {CHANNELS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
         <div className="flex items-center gap-3">
-          {selectedPriceFile && (
-            <span className="text-xs text-gray-400">📊 {selectedPriceFile.replace('.xlsx', '').replace('price_', '')}</span>
-          )}
+          {latestDate && <span className="text-xs text-gray-400">최신: {formatDateStr(latestDate)}</span>}
+          {latestDate && <span className="text-xs text-gray-400">📊 {formatDateStr(latestDate)}</span>}
           <span className="text-xs text-gray-400">모델 {totalModels}개 로드</span>
         </div>
       </header>
@@ -515,50 +907,37 @@ export default function PopMakerPage() {
           {/* ========== 좌측: 설정 패널 ========== */}
           <div className="w-[300px] shrink-0 flex flex-col gap-3">
             <Panel title="템플릿 선택">
-              <select
-                value={template.id}
-                onChange={e => setTemplate(TEMPLATES.find(t => t.id === e.target.value) || TEMPLATES[0])}
-                className="w-full p-2 rounded-lg border border-[#e0dcd4] text-sm font-semibold bg-[#FAFAF8] outline-none cursor-pointer"
-              >
-                {TEMPLATES.map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
+              <select value={template.id}
+                onChange={e => setTemplate(templates.find((t: TemplateInfo) => t.id === e.target.value) || templates[0])}
+                className="w-full p-2 rounded-lg border border-[#e0dcd4] text-sm font-semibold bg-[#FAFAF8] outline-none cursor-pointer">
+                {templates.map((t: TemplateInfo) => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
             </Panel>
 
             <Panel title="미리보기">
-              <div className="bg-[#f8f7f5] rounded-lg border border-[#e8e5df] h-[200px] flex items-center justify-center">
-                {checkedModels.size > 0 ? (
-                  <div className="text-center">
-                    <div className="w-[120px] h-[160px] bg-white rounded-md border border-gray-200 mx-auto flex flex-col items-center justify-center p-2 shadow-sm">
-                      <div className="text-[7px] text-[#A50034] font-extrabold mb-1">LG 구독</div>
-                      <div className="text-[6px] text-gray-500 mb-0.5 truncate w-full text-center">
-                        {Array.from(checkedModels)[0]}
-                      </div>
-                      <div className="w-4/5 h-px bg-gray-200 my-1" />
-                      {(() => {
-                        const firstModel = Array.from(checkedModels)[0];
-                        const allGroups = Object.values(categoryModelGroups).flat();
-                        const group = allGroups.find(g => g.model === firstModel);
-                        if (!group) return <div className="text-[8px] text-gray-400">-</div>;
-                        const calc = getCalculatedPrice(group);
-                        return (
-                          <>
-                            <div className="text-[8px] text-[#A50034] font-extrabold">월 {formatNumber(calc.discountPrice)}원</div>
-                            <div className="text-[5px] text-gray-400 mt-0.5">일 {formatNumber(calc.dailyPrice)}원</div>
-                          </>
-                        );
-                      })()}
-                      {qrOn && (
-                        <div className="mt-1.5 w-6 h-6 bg-gray-100 rounded-sm flex items-center justify-center">
-                          <span className="text-[5px] text-gray-400">QR</span>
-                        </div>
-                      )}
-                    </div>
-                    <div className="text-[10px] text-gray-400 mt-2">선택: {checkedModels.size}개 모델</div>
-                  </div>
+              <div className="bg-[#f8f7f5] rounded-lg border border-[#e8e5df] h-[200px] flex items-center justify-center overflow-hidden">
+                {templateThumb ? (
+                  <img src={templateThumb} alt={template.name} className="max-w-full max-h-full object-contain rounded" />
                 ) : (
-                  <span className="text-xs text-gray-300">모델을 선택하세요</span>
+                  <span className="text-xs text-gray-300">템플릿을 선택하세요</span>
                 )}
               </div>
+              {template.file && (
+                <div className="mt-2 text-[10px] text-gray-500 space-y-0.5">
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">용지</span>
+                    <span className="font-semibold">A4 {templateBatch?.paper_orientation || '가로'}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">배치</span>
+                    <span className="font-semibold">{templateBatch?.grid_cols || 2} × {templateBatch?.grid_rows || 2}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-400">개별 크기</span>
+                    <span className="font-semibold">{templateBatch?.item_width_mm || 148}mm × {templateBatch?.item_height_mm || 105}mm</span>
+                  </div>
+                </div>
+              )}
             </Panel>
 
             <Panel title="제휴카드">
@@ -595,7 +974,7 @@ export default function PopMakerPage() {
             </Panel>
 
             <button
-              onClick={handleGenerate}
+              onClick={() => setShowPrintDialog(true)}
               disabled={checkedModels.size === 0 || generating || !template.file}
               className="w-full py-3.5 rounded-xl border-none text-base font-bold transition-all"
               style={{
@@ -618,14 +997,129 @@ export default function PopMakerPage() {
             </button>
           </div>
 
+        {showPrintDialog && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm"
+            onClick={() => setShowPrintDialog(false)}>
+            <div className="bg-white rounded-2xl shadow-2xl p-6 w-[340px]"
+              onClick={e => e.stopPropagation()}>
+              <h3 className="text-base font-extrabold text-gray-800 mb-4">출력 설정</h3>
+
+                {/* 출력 크기 */}
+                <div className="mb-4">
+                  <div className="text-xs font-bold text-gray-500 mb-2">출력 크기</div>
+                  <div className="flex gap-2">
+                    {(['기본', 'A4', 'A5', 'A6'] as const).map(size => {
+                      const desc = size === '기본'
+                        ? `${templateBatch?.grid_cols || 2}×${templateBatch?.grid_rows || 2}`
+                        : size === 'A4' ? '1개/장' : size === 'A5' ? '2개/장' : '4개/장';
+                      return (
+                        <button key={size} onClick={() => setPrintSize(size)}
+                          className="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all cursor-pointer"
+                          style={{
+                            background: printSize === size ? '#A50034' : '#fff',
+                            color: printSize === size ? '#fff' : '#666',
+                            borderColor: printSize === size ? '#A50034' : '#e5e5e5',
+                          }}>
+                          {size}
+                          <div className="text-[10px] font-normal mt-0.5" style={{ color: printSize === size ? 'rgba(255,255,255,0.7)' : '#aaa' }}>
+                            {desc}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
+              {/* 용지 방향 */}
+              <div className="mb-5">
+                <div className="text-xs font-bold text-gray-500 mb-2">용지 방향</div>
+                <div className="flex gap-2">
+                  {(['가로', '세로'] as const).map(ori => (
+                    <button key={ori} onClick={() => setPrintOrientation(ori)}
+                      className="flex-1 py-2.5 rounded-xl text-sm font-bold border-2 transition-all cursor-pointer"
+                      style={{
+                        background: printOrientation === ori ? '#A50034' : '#fff',
+                        color: printOrientation === ori ? '#fff' : '#666',
+                        borderColor: printOrientation === ori ? '#A50034' : '#e5e5e5',
+                      }}>
+                      {ori === '가로' ? '⬜ 가로' : '⬛ 세로'}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* 요약 + 경고 */}
+              <div className="bg-gray-50 rounded-xl p-3 mb-4 text-center">
+                {printSize === '기본' ? (
+                  <>
+                    <span className="text-xs text-gray-400">A4 {printOrientation} · </span>
+                    <span className="text-sm font-bold text-[#A50034]">
+                      {(templateBatch?.grid_cols || 2) * (templateBatch?.grid_rows || 2)}개/장
+                    </span>
+                    <span className="text-xs text-gray-400"> · {checkedModels.size}개 모델 → </span>
+                    <span className="text-sm font-bold text-[#A50034]">
+                      {Math.ceil(checkedModels.size / ((templateBatch?.grid_cols || 2) * (templateBatch?.grid_rows || 2)))}장
+                    </span>
+                    <div className="mt-1.5 text-[10px] text-green-500">✅ 제작자 권장 설정</div>
+                  </>
+                ) : (
+                  <>
+                    <span className="text-xs text-gray-400">A4 {printOrientation} · </span>
+                    <span className="text-sm font-bold text-[#A50034]">
+                      {printSize === 'A4' ? '1' : printSize === 'A5' ? '2' : '4'}개/장
+                    </span>
+                    <span className="text-xs text-gray-400"> · {checkedModels.size}개 모델 → </span>
+                    <span className="text-sm font-bold text-[#A50034]">
+                      {Math.ceil(checkedModels.size / (printSize === 'A4' ? 1 : printSize === 'A5' ? 2 : 4))}장
+                    </span>
+                    {(() => {
+                      const tmplRatio = (templateBatch?.item_width_mm || 148) / (templateBatch?.item_height_mm || 105);
+                      const A4W = 297, A4H = 210;
+                      const paperW = printOrientation === '가로' ? A4W : A4H;
+                      const paperH = printOrientation === '가로' ? A4H : A4W;
+                      const cfg = {
+                        'A4': { cols: 1, rows: 1 },
+                        'A5': { cols: printOrientation === '가로' ? 2 : 1, rows: printOrientation === '가로' ? 1 : 2 },
+                        'A6': { cols: 2, rows: 2 },
+                      }[printSize]!;
+                      const cellW = paperW / cfg.cols;
+                      const cellH = paperH / cfg.rows;
+                      const cellRatio = cellW / cellH;
+                      const diff = Math.abs(tmplRatio - cellRatio) / Math.max(tmplRatio, cellRatio);
+                      if (diff > 0.2) {
+                        return (
+                          <div className="mt-2 text-[11px] text-orange-500 font-semibold bg-orange-50 rounded-lg px-3 py-1.5">
+                            ⚠️ 템플릿 비율과 출력 크기가 맞지 않아 이미지가 늘어날 수 있습니다
+                          </div>
+                        );
+                      }
+                      return <div className="mt-1.5 text-[10px] text-green-500">✅ 최적 출력</div>;
+                    })()}
+                  </>
+                )}
+              </div>
+              {/* 버튼 */}
+              <div className="flex gap-2">
+                <button onClick={() => setShowPrintDialog(false)}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-semibold border border-gray-200 text-gray-500 cursor-pointer hover:bg-gray-50">
+                  취소
+                </button>
+                <button onClick={() => { setShowPrintDialog(false); handleGenerate(); }}
+                  className="flex-1 py-2.5 rounded-xl text-sm font-bold text-white cursor-pointer"
+                  style={{ background: 'linear-gradient(135deg, #A50034, #C4003D)' }}>
+                  🎨 생성하기
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
           {/* ========== 미리보기 모달 ========== */}
           {showPreview && generatedImages.length > 0 && (
             <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
               onClick={() => setShowPreview(false)}>
               <div className="bg-white rounded-2xl shadow-2xl max-w-[90vw] max-h-[90vh] flex flex-col overflow-hidden"
                 onClick={e => e.stopPropagation()} style={{ width: 960 }}>
-
-                {/* 모달 헤더 */}
                 <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 bg-[#FAF8F5]">
                   <div className="flex items-center gap-3">
                     <h3 className="text-sm font-extrabold text-gray-800">가격표 미리보기</h3>
@@ -635,70 +1129,44 @@ export default function PopMakerPage() {
                     </span>
                   </div>
                   <div className="flex items-center gap-2">
-                    {/* 개별 다운로드 */}
-                    <button
-                      onClick={() => downloadImage(
-                        generatedImages[previewIndex],
-                        `${generatedNames[previewIndex] || 'price'}_${previewIndex + 1}.png`
-                      )}
+                    <button onClick={() => downloadImage(generatedImages[previewIndex], `${generatedNames[previewIndex] || 'price'}_${previewIndex + 1}.png`)}
                       className="text-xs px-3 py-1.5 bg-blue-500 text-white rounded-lg font-semibold hover:bg-blue-600 transition-colors cursor-pointer">
                       📥 이 이미지 저장
                     </button>
-                    {/* 전체 다운로드 */}
                     {generatedImages.length > 1 && (
-                      <button
-                        onClick={() => downloadAllImages(generatedImages, template.name)}
+                      <button onClick={() => downloadAllImages(generatedImages, template.name)}
                         className="text-xs px-3 py-1.5 bg-[#A50034] text-white rounded-lg font-semibold hover:bg-[#8a002c] transition-colors cursor-pointer">
                         📦 전체 저장 ({generatedImages.length}개)
                       </button>
                     )}
-                    {/* 닫기 */}
-                    <button
-                      onClick={() => setShowPreview(false)}
+                    <button onClick={() => setShowPreview(false)}
                       className="w-7 h-7 rounded-full bg-gray-100 text-gray-400 text-sm flex items-center justify-center hover:bg-gray-200 transition-colors cursor-pointer">
                       ✕
                     </button>
                   </div>
                 </div>
-
-                {/* 이미지 영역 */}
                 <div className="flex-1 overflow-auto p-4 flex items-center justify-center bg-gray-50" style={{ minHeight: 400 }}>
-                  <img
-                    src={generatedImages[previewIndex]}
-                    alt={`가격표 ${previewIndex + 1}`}
-                    className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md"
-                  />
+                  <img src={generatedImages[previewIndex]} alt={`가격표 ${previewIndex + 1}`}
+                    className="max-w-full max-h-[70vh] object-contain rounded-lg shadow-md" />
                 </div>
-
-                {/* 네비게이션 */}
                 {generatedImages.length > 1 && (
                   <div className="flex items-center justify-center gap-3 px-5 py-3 border-t border-gray-100 bg-[#FAF8F5]">
-                    <button
-                      onClick={() => setPreviewIndex(Math.max(0, previewIndex - 1))}
-                      disabled={previewIndex === 0}
-                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer hover:bg-gray-50 transition-colors">
+                    <button onClick={() => setPreviewIndex(Math.max(0, previewIndex - 1))} disabled={previewIndex === 0}
+                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer">
                       ◀ 이전
                     </button>
-
-                    {/* 썸네일 바 */}
                     <div className="flex gap-1.5 overflow-x-auto max-w-[600px] py-1">
                       {generatedImages.map((img, i) => (
-                        <button key={i}
-                          onClick={() => setPreviewIndex(i)}
+                        <button key={i} onClick={() => setPreviewIndex(i)}
                           className="shrink-0 rounded-md overflow-hidden border-2 transition-all cursor-pointer"
-                          style={{
-                            borderColor: i === previewIndex ? '#A50034' : 'transparent',
-                            opacity: i === previewIndex ? 1 : 0.5,
-                          }}>
+                          style={{ borderColor: i === previewIndex ? '#A50034' : 'transparent', opacity: i === previewIndex ? 1 : 0.5 }}>
                           <img src={img} alt="" className="w-12 h-8 object-cover" />
                         </button>
                       ))}
                     </div>
-
-                    <button
-                      onClick={() => setPreviewIndex(Math.min(generatedImages.length - 1, previewIndex + 1))}
+                    <button onClick={() => setPreviewIndex(Math.min(generatedImages.length - 1, previewIndex + 1))}
                       disabled={previewIndex === generatedImages.length - 1}
-                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer hover:bg-gray-50 transition-colors">
+                      className="px-3 py-1.5 text-xs rounded-lg border border-gray-200 bg-white text-gray-600 disabled:opacity-30 cursor-pointer">
                       다음 ▶
                     </button>
                   </div>
@@ -715,7 +1183,7 @@ export default function PopMakerPage() {
               <div className="flex gap-1.5 flex-wrap mb-3">
                 <CatButton label="전체" active={activeCategory === '전체'} onClick={() => setActiveCategory('전체')} />
                 <CatButton label="활성화 제품" count={activationCount} active={activeCategory === '활성화 제품'} color="#E67E22" bgTint="#FFF8F0" onClick={() => setActiveCategory('활성화 제품')} />
-                <CatButton label="변동 제품" count={0} active={activeCategory === '변동 제품'} color="#8E24AA" bgTint="#F9F0FF" onClick={() => setActiveCategory('변동 제품')} />
+                <CatButton label="변동 제품" count={changeCount} active={activeCategory === '변동 제품'} color="#8E24AA" bgTint="#F9F0FF" onClick={() => setActiveCategory('변동 제품')} />
                 <div className="w-px h-6 bg-gray-200 self-center mx-1" />
                 {categories.map(cat => (
                   <CatButton key={cat} label={cat} active={activeCategory === cat} onClick={() => setActiveCategory(cat)} />
@@ -724,18 +1192,22 @@ export default function PopMakerPage() {
 
               <div className="flex justify-between items-center pt-2.5 border-t border-gray-100">
                 <div className="flex gap-4 items-center">
-                  <label className="flex items-center gap-1.5 cursor-pointer">
-                    <input type="checkbox"
-                      checked={Object.values(filteredData).flat().every(g => checkedModels.has(g.model)) && filteredCount > 0}
-                      onChange={toggleAll} className="w-4 h-4 accent-[#A50034]" />
-                    <span className="text-xs text-gray-400">전체</span>
-                    <span className="text-base font-extrabold text-gray-700">{totalModels}</span>
-                  </label>
-                  {activeCategory !== '전체' && (
-                    <div className="flex items-center gap-1.5">
-                      <span className="text-xs text-gray-400">필터</span>
-                      <span className="text-base font-extrabold text-[#E67E22]">{filteredCount}</span>
-                    </div>
+                  {activeCategory !== '변동 제품' && (
+                    <>
+                      <label className="flex items-center gap-1.5 cursor-pointer">
+                        <input type="checkbox"
+                          checked={Object.values(filteredData).flat().every(g => checkedModels.has(g.model)) && filteredCount > 0}
+                          onChange={toggleAll} className="w-4 h-4 accent-[#A50034]" />
+                        <span className="text-xs text-gray-400">전체</span>
+                        <span className="text-base font-extrabold text-gray-700">{totalModels}</span>
+                      </label>
+                      {activeCategory !== '전체' && (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-400">필터</span>
+                          <span className="text-base font-extrabold text-[#E67E22]">{filteredCount}</span>
+                        </div>
+                      )}
+                    </>
                   )}
                   <div className="flex items-center gap-1.5">
                     <span className="text-xs text-gray-400">선택</span>
@@ -745,139 +1217,226 @@ export default function PopMakerPage() {
               </div>
             </div>
 
-            {/* 제품군별 가격 테이블 */}
+            {/* 컨텐츠 영역 */}
             <div className="bg-white rounded-b-xl px-5 pb-5 flex-1 shadow-sm overflow-x-auto">
-              {visibleCategories.length === 0 ? (
-                <div className="py-10 text-center text-gray-300 text-sm">
-                  {activeCategory === '변동 제품' ? '이전 가격표를 업로드하면 변동 제품을 확인할 수 있습니다.' : '해당 카테고리에 모델이 없습니다'}
-                </div>
-              ) : (
-                visibleCategories.map(cat => {
-                  const catGroups = filteredData[cat];
-                  return (
-                    <div key={cat} className="mt-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <div className="w-[3px] h-[18px] bg-[#A50034] rounded-sm" />
-                        <span className="text-base font-extrabold text-gray-900">{cat}</span>
-                        <span className="text-xs text-gray-300">({catGroups.length}개)</span>
-                        <div className="flex-1" />
-                        <label className="flex items-center gap-1 cursor-pointer">
+
+              {/* ===== 변동 제품 탭 ===== */}
+              {activeCategory === '변동 제품' ? (
+                <div className="py-4">
+                  {/* 날짜 선택 - 캘린더 */}
+                  <div className="bg-[#F9F7FF] rounded-xl p-4 mb-4 border border-[#E8E0F0]">
+                    <div className="flex items-center gap-3 mb-3">
+                      <span className="text-sm font-bold text-[#8E24AA]">📅 비교 기준 날짜</span>
+                      {latestDate && <span className="text-xs text-gray-400">현재: {formatDateStr(latestDate)}</span>}
+                    </div>
+                    {comparableDates.length === 0 ? (
+                      <div className="text-sm text-gray-400 py-2">
+                        비교할 과거 가격표가 없습니다.
+                      </div>
+                    ) : (
+                      <>
+                        {/* 빠른 선택 버튼 */}
+                        <div className="flex gap-2 flex-wrap mb-3">
+                          {comparableDates.map(d => (
+                            <button key={d} onClick={() => { runCompare(d); setShowCalendar(false); }}
+                              className="px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border cursor-pointer"
+                              style={{
+                                background: selectedCompareDate === d ? '#8E24AA' : '#fff',
+                                color: selectedCompareDate === d ? '#fff' : '#8E24AA',
+                                borderColor: selectedCompareDate === d ? '#8E24AA' : '#D1C4E9',
+                              }}>
+                              {formatDateStr(d)}
+                            </button>
+                          ))}
+                          <button onClick={() => setShowCalendar(!showCalendar)}
+                            className="px-3 py-1.5 rounded-lg text-xs font-semibold border cursor-pointer transition-all"
+                            style={{
+                              background: showCalendar ? '#8E24AA' : '#fff',
+                              color: showCalendar ? '#fff' : '#8E24AA',
+                              borderColor: '#D1C4E9',
+                            }}>
+                            🗓️ 캘린더
+                          </button>
+                        </div>
+
+                        {/* 미니 캘린더 */}
+                        {showCalendar && (
+                          <MiniCalendar
+                            availableDates={comparableDates}
+                            selectedDate={selectedCompareDate}
+                            latestDate={latestDate}
+                            month={calendarMonth}
+                            onMonthChange={setCalendarMonth}
+                            onSelect={(d) => { runCompare(d); }}
+                          />
+                        )}
+                      </>
+                    )}
+                    {selectedCompareDate && latestDate && (
+                      <div className="mt-3 text-xs text-gray-500">
+                        {formatDateStr(selectedCompareDate)} → {formatDateStr(latestDate)} 변동 비교
+                      </div>
+                    )}
+                  </div>
+
+                  {/* 로딩 */}
+                  {compareLoading && (
+                    <div className="py-10 text-center">
+                      <div className="w-8 h-8 border-[3px] border-[#8E24AA] border-t-transparent rounded-full animate-spin mx-auto mb-2" />
+                      <p className="text-sm text-gray-400">비교 중...</p>
+                    </div>
+                  )}
+
+                  {/* 비교 결과 */}
+                  {!compareLoading && compareResult && (
+                    <>
+                      {/* 요약 필터 카드: 전체 → 신규 → 인하 → 인상 → 삭제 */}
+                      <div className="flex gap-3 mb-4">
+                        {[
+                          { key: 'all' as const, label: '전체', count: compareResult.summary.totalChanges, color: '#6B7280', bg: '#F3F4F6' },
+                          { key: 'new' as const, label: '신규', count: compareResult.summary.newCount, color: '#16A34A', bg: '#F0FDF4' },
+                          { key: 'down' as const, label: '인하', count: compareResult.summary.downCount, color: '#2563EB', bg: '#EFF6FF' },
+                          { key: 'up' as const, label: '인상', count: compareResult.summary.upCount, color: '#EA580C', bg: '#FFF7ED' },
+                          { key: 'deleted' as const, label: '삭제', count: compareResult.summary.deletedCount, color: '#9CA3AF', bg: '#F9FAFB' },
+                        ].map(s => (
+                          <button key={s.key} onClick={() => setChangeFilter(s.key)}
+                            className="flex-1 rounded-xl p-3 text-center transition-all border-2 cursor-pointer"
+                            style={{
+                              background: s.bg,
+                              borderColor: changeFilter === s.key ? s.color : 'transparent',
+                              opacity: s.count === 0 && s.key !== 'all' ? 0.4 : 1,
+                            }}>
+                            <div className="text-2xl font-extrabold" style={{ color: s.color }}>{s.count}</div>
+                            <div className="text-xs font-semibold mt-0.5" style={{ color: s.color }}>{s.label}</div>
+                          </button>
+                        ))}
+                      </div>
+
+                      {/* 전체 선택 (삭제 제외) */}
+                      <div className="flex items-center mb-3">
+                        <label className="flex items-center gap-2 cursor-pointer">
                           <input type="checkbox"
-                            checked={catGroups.every(g => checkedModels.has(g.model))}
-                            onChange={() => toggleCatAll(cat)} className="w-3.5 h-3.5 accent-[#A50034]" />
-                          <span className="text-[11px] text-gray-400">전체선택</span>
+                            checked={
+                              filteredChangeTableData.filter(s => !s.isDeleted).flatMap(s => s.groups).length > 0 &&
+                              filteredChangeTableData.filter(s => !s.isDeleted).flatMap(s => s.groups).every(g => checkedModels.has(g.model))
+                            }
+                            onChange={toggleAllChanges}
+                            className="w-4 h-4 accent-[#8E24AA]" />
+                          <span className="text-xs text-gray-500">변동 모델 전체 선택 (삭제 제외)</span>
                         </label>
                       </div>
 
-                      <div className="rounded-xl overflow-hidden border border-gray-100">
-                        <table className="w-full border-collapse text-xs" style={{ minWidth: 900 }}>
-                          <thead>
-                            <tr className="bg-[#FAF8F5]">
-                              <th className="w-9 p-2 border-b-2 border-[#A50034]" />
-                              <th className="p-2 text-left text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">모델명</th>
-                              <th className="w-[68px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">계약기간</th>
-                              <th className="w-[90px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십형태</th>
-                              <th className="w-[110px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십구분</th>
-                              <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">방문주기</th>
-                              <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">정상구독료</th>
-                              <th className="w-[56px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">활성화</th>
-                              <th className="w-[60px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">카드혜택</th>
-                              <th className="w-[80px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">월구독료</th>
-                            </tr>
-                          </thead>
-                          <tbody>
-                            {catGroups.map((group) => {
-                              const checked = checkedModels.has(group.model);
-                              const calc = getCalculatedPrice(group);
-                              const sel = modelSelections[group.model] || { period: '6년', careType: '', careGrade: '', visitCycle: '' };
-                              const opts = getDropdownOptions(group);
-                              const selectedRow = getSelectedRow(group);
-                              const availPeriods = getAvailablePeriods(selectedRow);
+                      {/* 상태별 테이블: 신규 → 인하 → 인상 → 삭제 */}
+                      {filteredChangeTableData.length === 0 ? (
+                        <div className="py-8 text-center text-gray-300 text-sm">해당 유형의 변동이 없습니다.</div>
+                      ) : (
+                        filteredChangeTableData.map(section => {
+                          const sc = STATUS_CONFIG[section.status];
+                          return (
+                            <div key={section.status} className="mt-4">
+                              {/* 섹션 헤더 */}
+                              <div className="flex items-center gap-2 mb-2">
+                                <div className="w-[3px] h-[18px] rounded-sm" style={{ background: sc.color }} />
+                                <span className="text-base font-extrabold" style={{ color: sc.color }}>{sc.label}</span>
+                                <span className="text-xs text-gray-500 font-semibold">({section.groups.length}개 모델)</span>
+                                <div className="flex-1" />
+                              </div>
 
-                              return (
-                                <tr key={group.model}
-                                  className="border-t border-gray-50 transition-all"
-                                  style={{ background: checked ? '#fff' : '#fafafa', opacity: checked ? 1 : 0.5 }}>
-                                  <td className="text-center p-2 cursor-pointer" onClick={() => toggleModel(group.model)}>
-                                    <input type="checkbox" checked={checked} onChange={() => {}} className="w-4 h-4 accent-[#A50034] cursor-pointer" />
-                                  </td>
-                                  <td className="p-2 font-bold text-[11px] text-gray-700 tracking-tight cursor-pointer" onClick={() => toggleModel(group.model)}
-                                    style={{ fontFamily: "'JetBrains Mono', 'Fira Code', monospace" }}>
-                                    {group.model}
-                                    {group.rows.length > 1 && (
-                                      <span className="ml-1 text-[9px] text-gray-300 font-normal">({group.rows.length})</span>
+                              <div className="rounded-xl overflow-hidden border border-gray-100">
+                                <table className="w-full border-collapse text-xs" style={{ minWidth: 1000 }}>
+                                  <thead>
+                                    <tr className="bg-[#FAF8F5]">
+                                      <th className="w-9 p-2 border-b-2" style={{ borderColor: sc.color }}>
+                                        {!section.isDeleted && (
+                                          <input type="checkbox"
+                                            checked={section.groups.every(g => checkedModels.has(g.model))}
+                                            onChange={() => toggleStatusAll(section.status)}
+                                            className="w-4 h-4 cursor-pointer" style={{ accentColor: sc.color }} />
+                                        )}
+                                      </th>
+                                      <th className="w-[160px] p-2 text-left text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>모델명</th>
+                                      <th className="w-[68px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>계약기간</th>
+                                      <th className="w-[90px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>케어십형태</th>
+                                      <th className="w-[110px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>케어십구분</th>
+                                      <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>방문주기</th>
+                                      <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>정상구독료</th>
+                                      <th className="w-[56px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>활성화</th>
+                                      <th className="w-[60px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>카드혜택</th>
+                                      <th className="w-[80px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>월구독료</th>
+                                      <th className="w-[90px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2" style={{ borderColor: sc.color }}>변동</th>
+                                    </tr>
+                                  </thead>
+                                  <tbody>
+                                    {section.groups.map(group =>
+                                      renderModelRow(group, {
+                                        disabled: section.isDeleted,
+                                        statusBadge: section.status,
+                                        showChange: true,
+                                      })
                                     )}
-                                  </td>
-                                  {/* 계약기간 */}
-                                  <td className="text-center p-2">
-                                    <select value={sel.period || '6년'}
-                                      onChange={e => { e.stopPropagation(); updateSelection(group.model, 'period', e.target.value); }}
-                                      onClick={e => e.stopPropagation()}
-                                      className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
-                                      {['6년', '5년', '4년', '3년'].map(p => (
-                                        <option key={p} value={p} disabled={!availPeriods.includes(p)}>{p}{!availPeriods.includes(p) ? '' : ''}</option>
-                                      ))}
-                                    </select>
-                                  </td>
-                                  {/* 케어십형태 */}
-                                  <td className="text-center p-2">
-                                    {opts.careTypes.length <= 1 ? (
-                                      <span className="text-[11px] text-gray-500">{opts.careTypes[0] || '-'}</span>
-                                    ) : (
-                                      <select value={sel.careType || opts.careTypes[0]}
-                                        onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careType', e.target.value); }}
-                                        onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
-                                        {opts.careTypes.map(ct => <option key={ct} value={ct}>{ct}</option>)}
-                                      </select>
-                                    )}
-                                  </td>
-                                  {/* 케어십구분 */}
-                                  <td className="text-center p-2">
-                                    {opts.careGrades.length <= 1 ? (
-                                      <span className="text-[11px] text-gray-500">{opts.careGrades[0] || '-'}</span>
-                                    ) : (
-                                      <select value={sel.careGrade || opts.careGrades[0]}
-                                        onChange={e => { e.stopPropagation(); updateSelection(group.model, 'careGrade', e.target.value); }}
-                                        onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
-                                        {opts.careGrades.map(cg => <option key={cg} value={cg}>{cg}</option>)}
-                                      </select>
-                                    )}
-                                  </td>
-                                  {/* 방문주기 */}
-                                  <td className="text-center p-2">
-                                    {opts.visitCycles.length <= 1 ? (
-                                      <span className="text-[11px] text-gray-500">{opts.visitCycles[0] || '-'}</span>
-                                    ) : (
-                                      <select value={sel.visitCycle || opts.visitCycles[0]}
-                                        onChange={e => { e.stopPropagation(); updateSelection(group.model, 'visitCycle', e.target.value); }}
-                                        onClick={e => e.stopPropagation()}
-                                        className="text-[11px] p-1 rounded border border-gray-200 bg-white cursor-pointer w-full">
-                                        {opts.visitCycles.map(vc => <option key={vc} value={vc}>{vc}</option>)}
-                                      </select>
-                                    )}
-                                  </td>
-                                  {/* 가격 컬럼들 */}
-                                  <td className="text-center p-2 font-semibold text-gray-500">{formatNumber(calc.basePrice)}</td>
-                                  <td className="text-center p-2 font-semibold" style={{
-                                    color: calc.activation > 0 ? '#E67E22' : '#ccc',
-                                    textDecoration: calc.activation === 0 ? 'line-through' : 'none',
-                                  }}>{formatNumber(calc.activation)}</td>
-                                  <td className="text-center p-2 font-bold text-blue-600">{formatNumber(calc.discountAmount)}</td>
-                                  <td className="text-center p-2">
-                                    <span className="font-extrabold text-[#A50034] text-sm">{formatNumber(calc.discountPrice)}</span>
-                                    <div className="text-[9px] text-gray-400 mt-0.5">일 {formatNumber(calc.dailyPrice)}원</div>
-                                  </td>
-                                </tr>
-                              );
-                            })}
-                          </tbody>
-                        </table>
-                      </div>
+                                  </tbody>
+                                </table>
+                              </div>
+                            </div>
+                          );
+                        })
+                      )}
+                    </>
+                  )}
+
+                  {/* 비교 전 안내 */}
+                  {!compareLoading && !compareResult && comparableDates.length > 0 && (
+                    <div className="py-10 text-center text-gray-300 text-sm">
+                      위에서 비교할 날짜를 선택하세요.
                     </div>
-                  );
-                })
+                  )}
+                </div>
+              ) : (
+                /* ===== 기존 가격 테이블 ===== */
+                visibleCategories.length === 0 ? (
+                  <div className="py-10 text-center text-gray-300 text-sm">해당 카테고리에 모델이 없습니다</div>
+                ) : (
+                  visibleCategories.map(cat => {
+                    const catGroups = filteredData[cat];
+                    return (
+                      <div key={cat} className="mt-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <div className="w-[3px] h-[18px] bg-[#A50034] rounded-sm" />
+                          <span className="text-base font-extrabold text-gray-900">{cat}</span>
+                          <span className="text-xs text-gray-500 font-semibold">({catGroups.length}개 모델)</span>
+                          <div className="flex-1" />
+                        </div>
+
+                        <div className="rounded-xl overflow-hidden border border-gray-100">
+                          <table className="w-full border-collapse text-xs" style={{ minWidth: 900 }}>
+                            <thead>
+                              <tr className="bg-[#FAF8F5]">
+                                <th className="w-9 p-2 border-b-2 border-[#A50034]">
+                                  <input type="checkbox"
+                                    checked={catGroups.every(g => checkedModels.has(g.model))}
+                                    onChange={() => toggleCatAll(cat)}
+                                    className="w-4 h-4 accent-[#A50034] cursor-pointer" />
+                                </th>
+                                <th className="w-[160px] p-2 text-left text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">모델명</th>
+                                <th className="w-[68px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">계약기간</th>
+                                <th className="w-[90px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십형태</th>
+                                <th className="w-[110px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">케어십구분</th>
+                                <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">방문주기</th>
+                                <th className="w-[76px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">정상구독료</th>
+                                <th className="w-[56px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">활성화</th>
+                                <th className="w-[60px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">카드혜택</th>
+                                <th className="w-[80px] p-2 text-center text-[11px] font-bold text-gray-400 border-b-2 border-[#A50034]">월구독료</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {catGroups.map(group => renderModelRow(group))}
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    );
+                  })
+                )
               )}
             </div>
           </div>
@@ -940,5 +1499,109 @@ function CatButton({ label, count, active, color, bgTint, onClick }: {
         </span>
       )}
     </button>
+  );
+}
+
+// ==========================================
+// 미니 캘린더 컴포넌트
+// ==========================================
+function MiniCalendar({ availableDates, selectedDate, latestDate, month, onMonthChange, onSelect }: {
+  availableDates: string[];
+  selectedDate: string;
+  latestDate: string;
+  month: Date;
+  onMonthChange: (d: Date) => void;
+  onSelect: (d: string) => void;
+}) {
+  // YYMMDD → Date
+  const parseDateStr = (d: string) => new Date(2000 + parseInt(d.slice(0,2)), parseInt(d.slice(2,4)) - 1, parseInt(d.slice(4,6)));
+  const dateSet = new Set(availableDates);
+  const latestSet = new Set([latestDate]);
+
+  const year = month.getFullYear();
+  const mon = month.getMonth();
+  const firstDay = new Date(year, mon, 1).getDay();
+  const daysInMonth = new Date(year, mon + 1, 0).getDate();
+
+  const prevMonth = () => onMonthChange(new Date(year, mon - 1, 1));
+  const nextMonth = () => onMonthChange(new Date(year, mon + 1, 1));
+
+  // 날짜를 YYMMDD로 변환
+  const toDateStr = (day: number) => {
+    const y = String(year).slice(2);
+    const m = String(mon + 1).padStart(2, '0');
+    const d = String(day).padStart(2, '0');
+    return `${y}${m}${d}`;
+  };
+
+  const dayNames = ['일', '월', '화', '수', '목', '금', '토'];
+
+  return (
+    <div className="bg-white rounded-xl border border-[#E8E0F0] p-3 mt-2" style={{ maxWidth: 320 }}>
+      {/* 헤더 */}
+      <div className="flex items-center justify-between mb-2">
+        <button onClick={prevMonth} className="w-7 h-7 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer text-gray-500 text-sm">◀</button>
+        <span className="text-sm font-bold text-gray-700">{year}년 {mon + 1}월</span>
+        <button onClick={nextMonth} className="w-7 h-7 rounded-full hover:bg-gray-100 flex items-center justify-center cursor-pointer text-gray-500 text-sm">▶</button>
+      </div>
+
+      {/* 요일 헤더 */}
+      <div className="grid grid-cols-7 gap-0.5 mb-1">
+        {dayNames.map(d => (
+          <div key={d} className="text-center text-[10px] font-bold text-gray-400 py-1">{d}</div>
+        ))}
+      </div>
+
+      {/* 날짜 그리드 */}
+      <div className="grid grid-cols-7 gap-0.5">
+        {/* 빈 칸 */}
+        {Array.from({ length: firstDay }).map((_, i) => (
+          <div key={`empty-${i}`} className="h-8" />
+        ))}
+        {/* 날짜 */}
+        {Array.from({ length: daysInMonth }).map((_, i) => {
+          const day = i + 1;
+          const ds = toDateStr(day);
+          const isAvailable = dateSet.has(ds);
+          const isLatest = latestSet.has(ds);
+          const isSelected = selectedDate === ds;
+
+          return (
+            <button
+              key={day}
+              onClick={() => isAvailable && onSelect(ds)}
+              disabled={!isAvailable && !isLatest}
+              className="h-8 rounded-lg text-xs font-semibold flex items-center justify-center relative transition-all"
+              style={{
+                background: isSelected ? '#8E24AA' : isLatest ? '#F0FDF4' : isAvailable ? '#F3E8FF' : 'transparent',
+                color: isSelected ? '#fff' : isLatest ? '#16A34A' : isAvailable ? '#8E24AA' : '#D1D5DB',
+                cursor: isAvailable ? 'pointer' : 'default',
+                border: isLatest ? '1.5px solid #86EFAC' : isAvailable ? '1.5px solid #D8B4FE' : '1px solid transparent',
+                fontWeight: isAvailable || isLatest ? 700 : 400,
+              }}
+            >
+              {day}
+              {isLatest && <span className="absolute -top-1 -right-1 w-2 h-2 bg-green-400 rounded-full" />}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* 범례 */}
+      <div className="flex gap-4 mt-2 pt-2 border-t border-gray-100">
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 rounded bg-[#F3E8FF] border border-[#D8B4FE]" />
+          <span className="text-[10px] text-gray-500">과거 가격표</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 rounded bg-[#F0FDF4] border border-[#86EFAC]" />
+          <span className="text-[10px] text-gray-500">최신 (현재)</span>
+        </div>
+        <div className="flex items-center gap-1">
+          <div className="w-3 h-3 rounded bg-[#8E24AA]" />
+          <span className="text-[10px] text-gray-500">선택됨</span>
+        </div>
+      </div>
+    </div>
   );
 }

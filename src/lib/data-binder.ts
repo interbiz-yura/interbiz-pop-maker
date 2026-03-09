@@ -36,7 +36,7 @@ export function bindValue(name: string, data: CalculatedData): string {
 
     // 일구독 (÷31)
     case '일구독':
-      return data.dailyPrice > 0 ? formatNumber(data.dailyPrice) : '';
+      return data.dailyPrice > 0 ? `일 ${formatNumber(data.dailyPrice)}원` : '';
 
     // 카드 안내 문구
     case '제휴카드 안내':
