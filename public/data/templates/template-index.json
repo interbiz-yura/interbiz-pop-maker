@@ -1,3 +1,17 @@
 [
-  { "id": "A6 이마트 QR코드", "name": "A6 이마트 QR코드", "file": "A6 이마트 QR코드.json", "pattern": "B" }
+  { "id": "emart-a6-qr", "name": "A6 QR코드", "file": "A6 이마트 QR코드.json", "channel": ["emart"], "qr": true, "prepay": false },
+  { "id": "basic-qr", "name": "구독 기본 가격표(QR코드)", "file": "구독 기본 가격표(QR코드).json", "channel": ["emart", "homeplus", "electromart"], "qr": true, "prepay": false },
+  { "id": "basic", "name": "구독 기본 가격표", "file": "구독 기본 가격표.json", "channel": ["emart", "homeplus", "electromart"], "qr": false, "prepay": false },
+  { "id": "et-basic-qr", "name": "ET 구독 기본 가격표(QR코드)", "file": "ET 구독 기본 가격표(QR코드).json", "channel": ["traders"], "qr": true, "prepay": false },
+  { "id": "et-basic", "name": "ET 구독 기본 가격표", "file": "ET 구독 기본 가격표.json", "channel": ["traders"], "qr": false, "prepay": false },
+  { "id": "emart-90x55-qr", "name": "90x55mm 가격표(QR코드)", "file": "이마트 구독 가격(QR코드).json", "channel": ["emart", "electromart"], "qr": true, "prepay": false },
+  { "id": "emart-90x55", "name": "90x55mm 가격표", "file": "이마트 구독 가격.json", "channel": ["emart", "electromart"], "qr": false, "prepay": false },
+  { "id": "a4-prepay-emart", "name": "구독 선납 가격표(세로형)", "file": "A4 구독 선납 이마트.json", "channel": ["emart"], "qr": false, "prepay": true },
+  { "id": "a4-prepay-elec", "name": "구독 선납 가격표(세로형)", "file": "A4 구독 선납 일렉.json", "channel": ["electromart"], "qr": false, "prepay": true },
+  { "id": "a4-prepay-traders", "name": "구독 선납 가격표(세로형)", "file": "A4 구독 선납 트레이더스.json", "channel": ["traders"], "qr": false, "prepay": true },
+  { "id": "a4-prepay-homeplus", "name": "구독 선납 가격표(세로형)", "file": "A4 구독 선납 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": true },
+  { "id": "a5-prepay-emart", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 이마트.json", "channel": ["emart"], "qr": false, "prepay": true },
+  { "id": "a5-prepay-elec", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 일렉.json", "channel": ["electromart"], "qr": false, "prepay": true },
+  { "id": "a5-prepay-traders", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 트레이더스.json", "channel": ["traders"], "qr": false, "prepay": true },
+  { "id": "a5-prepay-homeplus", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": true }
 ]

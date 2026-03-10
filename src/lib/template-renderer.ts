@@ -174,7 +174,7 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
   // 4) QR코드 렌더링
   if (qrDataUrl && template.qr_enabled && template.qr_settings) {
     const { position_ratio, size_ratio } = template.qr_settings;
-    const qrSize = size_ratio * width;
+    const qrSize = size_ratio * width * 0.7;
     const qrX = position_ratio[0] * width - qrSize / 2;
     const qrY = position_ratio[1] * height - qrSize / 2;
 
@@ -282,6 +282,31 @@ export async function renderBatch(
         img.src = pageItems[i];
       });
     }
+
+// 절취선 그리기
+    ctx.setLineDash([10, 6]);
+    ctx.strokeStyle = '#cccccc';
+    ctx.lineWidth = 1.5;
+
+    // 세로 절취선
+    for (let c = 1; c < cols; c++) {
+      const x = c * cellW;
+      ctx.beginPath();
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, paperH);
+      ctx.stroke();
+    }
+
+    // 가로 절취선
+    for (let r = 1; r < rows; r++) {
+      const y = r * cellH;
+      ctx.beginPath();
+      ctx.moveTo(0, y);
+      ctx.lineTo(paperW, y);
+      ctx.stroke();
+    }
+
+    ctx.setLineDash([]);
 
     results.push(canvas.toDataURL('image/png'));
   }

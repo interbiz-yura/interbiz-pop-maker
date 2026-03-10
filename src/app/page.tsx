@@ -13,12 +13,16 @@ import { loadTemplate } from '@/lib/data-loader';
 import { renderBatch, downloadImage, downloadAllImages, preloadFonts } from '@/lib/template-renderer';
 import { bindAllValues } from '@/lib/data-binder';
 import type { PriceRow, CardInfo, QRMapping, CareBenefit } from '@/lib/types';
+import QRCode from 'qrcode';
 
 interface TemplateInfo {
   id: string;
   name: string;
   file: string;
   pattern: 'A' | 'B';
+  channel: string[];  // 추가
+  qr: boolean;        // 추가
+  prepay: boolean;     // 추가
 }
 
 // ==========================================
@@ -28,6 +32,8 @@ const CHANNELS = [
   { id: 'emart', name: '이마트', sheet: '이마트-업데이트' },
   { id: 'homeplus', name: '홈플러스', sheet: '홈플러스-업데이트' },
   { id: 'jeonjaland', name: '전자랜드', sheet: '전자랜드-업데이트' },
+  { id: 'traders', name: '트레이더스', sheet: '이마트-업데이트' },
+  { id: 'electromart', name: '일렉트로마트', sheet: '이마트-업데이트' },
 ];
 
 // ==========================================
@@ -151,6 +157,7 @@ export default function PopMakerPage() {
   const [monthUsage, setMonthUsage] = useState('');
   const [activationOn, setActivationOn] = useState(false);
   const [qrOn, setQrOn] = useState(true);
+  const [showSuffix, setShowSuffix] = useState(false);
   const [prepay, setPrepay] = useState('없음');
   const [activeCategory, setActiveCategory] = useState('전체');
   const [checkedModels, setCheckedModels] = useState<Set<string>>(new Set());
@@ -183,7 +190,7 @@ export default function PopMakerPage() {
   const [showCalendar, setShowCalendar] = useState(false);
 
   const [templates, setTemplates] = useState<TemplateInfo[]>([]);
-  const [template, setTemplate] = useState<TemplateInfo>({ id: '', name: '', file: '', pattern: 'B' });
+  const [template, setTemplate] = useState<TemplateInfo>({ id: '', name: '', file: '', pattern: 'B', channel: [], qr: false, prepay: false });
 
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [printSize, setPrintSize] = useState<'기본' | 'A4' | 'A5' | 'A6'>('기본');
@@ -585,6 +592,11 @@ export default function PopMakerPage() {
   // ----- 카드 변경 시 월실적 리셋 -----
   useEffect(() => { setMonthUsage(''); }, [cardName]);
 
+  useEffect(() => {
+    const filtered = templates.filter(t => t.channel?.includes(channel.id));
+    if (filtered.length > 0) setTemplate(filtered[0]);
+  }, [channel, templates]);
+
   // ----- 가격표 생성 -----
   const handleGenerate = useCallback(async () => {
       if (checkedModels.size === 0 || !template.file) return;
@@ -630,7 +642,7 @@ export default function PopMakerPage() {
 
           // CalculatedData 생성
           const calcData = {
-            model: modelName,
+            model: showSuffix ? modelName : (modelName.includes('.') ? modelName.split('.')[0] : modelName),
             category: row.category || '',
             listPrice: row.listPrice || 0,
             basePrice,
@@ -675,7 +687,30 @@ export default function PopMakerPage() {
           }
         }
         console.log('[GEN] batch:', printSize, printOrientation, tmpl.batch_settings);
-        const images = await renderBatch(tmpl, allValues);
+        // QR코드 생성
+        let qrDataUrls: string[] = [];
+        if (qrOn && tmpl.qr_enabled) {
+          for (const modelName of allNames) {
+            const group = allGroups.find(g => g.model === modelName);
+            const category = group?.category || '';
+            const qrUrl = qrMapping[category] || '';
+            console.log('[QR]', modelName, '→ category:', category, '→ url:', qrUrl);
+            console.log('[QR] qrOn:', qrOn, 'qr_enabled:', tmpl.qr_enabled);
+            console.log('[QR] category:', JSON.stringify(category), '→ mapping keys:', Object.keys(qrMapping).filter(k => k.includes(category.slice(0, 2))));
+            if (qrUrl) {
+              try {
+                const dataUrl = await QRCode.toDataURL(qrUrl, { width: 300, margin: 1 });
+                qrDataUrls.push(dataUrl);
+              } catch {
+                qrDataUrls.push('');
+              }
+            } else {
+              qrDataUrls.push('');
+            }
+          }
+        }
+
+        const images = await renderBatch(tmpl, allValues, qrDataUrls);
         setGeneratedImages(images);
         setGeneratedNames(allNames);
         setPreviewIndex(0);
@@ -686,7 +721,7 @@ export default function PopMakerPage() {
       } finally {
         setGenerating(false);
       }
-    }, [checkedModels, template, categoryModelGroups, getSelectedRow, modelSelections, activationOn, cards, cardName, monthUsage, careBenefits, qrMapping, printSize, printOrientation]);
+    }, [checkedModels, template, categoryModelGroups, getSelectedRow, modelSelections, activationOn, cards, cardName, monthUsage, careBenefits, qrMapping, printSize, printOrientation, qrOn, showSuffix]);
     // ----- 비교 가능한 과거 날짜 (최신 제외) -----
     const comparableDates = useMemo(
       () => priceDates.filter(d => d !== latestDate),
@@ -890,6 +925,7 @@ export default function PopMakerPage() {
             onChange={e => setChannel(CHANNELS.find(c => c.id === e.target.value) || CHANNELS[0])}
             className="text-xs text-[#A50034] font-bold border-[1.5px] border-[#A50034] px-2 py-0.5 rounded bg-transparent outline-none cursor-pointer"
           >
+
             {CHANNELS.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
@@ -908,9 +944,9 @@ export default function PopMakerPage() {
           <div className="w-[300px] shrink-0 flex flex-col gap-3">
             <Panel title="템플릿 선택">
               <select value={template.id}
-                onChange={e => setTemplate(templates.find((t: TemplateInfo) => t.id === e.target.value) || templates[0])}
+                onChange={e => setTemplate(templates.find(t => t.id === e.target.value) || templates[0])}
                 className="w-full p-2 rounded-lg border border-[#e0dcd4] text-sm font-semibold bg-[#FAFAF8] outline-none cursor-pointer">
-                {templates.map((t: TemplateInfo) => <option key={t.id} value={t.id}>{t.name}</option>)}
+                {templates.filter(t => t.channel?.includes(channel.id)).map(t => <option key={t.id} value={t.id}>{t.name}</option>)}
               </select>
             </Panel>
 
@@ -959,9 +995,11 @@ export default function PopMakerPage() {
               <div className="flex flex-col gap-2.5">
                 <ToggleRow label="활성화 할인 적용" desc="OFF 시 K열 금액 가산" checked={activationOn} onChange={() => setActivationOn(!activationOn)} />
                 <div className="h-px bg-[#f0ece4]" />
+                <ToggleRow label="모델명 서픽스 표시" desc="OFF 시 마침표(.) 뒤 제거" checked={showSuffix} onChange={() => setShowSuffix(!showSuffix)} />
+                <div className="flex flex-col gap-2.5">
+                <div className="h-px bg-[#f0ece4]" />
                 <ToggleRow label="QR코드 포함" desc="가격표에 QR코드 표시" checked={qrOn} onChange={() => setQrOn(!qrOn)} />
                 <div className="h-px bg-[#f0ece4]" />
-                <div>
                   <div className="text-sm font-semibold text-gray-700 mb-1.5">선납 할인</div>
                   <select value={prepay} onChange={e => setPrepay(e.target.value)}
                     className="w-full p-2 rounded-lg border border-[#e0dcd4] text-sm bg-[#FAFAF8] outline-none cursor-pointer">
