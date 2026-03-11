@@ -1647,6 +1647,7 @@ return (
                           <tr>
                             <th className="w-10 p-3 border-b-2 border-gray-300 text-center"><input type="checkbox" checked={catGroups.every((g: any) => checkedModels.has(g.model))} onChange={() => toggleCatAll(cat)} className="w-4 h-4 accent-blue-600 cursor-pointer" /></th>
                             <th className="w-[160px] p-3 border-b-2 border-gray-300 text-left font-extrabold text-slate-700 text-[13px]">모델명</th>
+                            <th className="w-[60px] p-3 border-b-2 border-gray-300 text-center font-extrabold text-slate-700 text-[13px]">수량</th>
                             <th className="w-[68px] p-3 border-b-2 border-gray-300 text-center font-extrabold text-slate-700 text-[13px]">계약기간</th>
                             <th className="w-[90px] p-3 border-b-2 border-gray-300 text-center font-extrabold text-slate-700 text-[13px]">케어십형태</th>
                             <th className="w-[110px] p-3 border-b-2 border-gray-300 text-center font-extrabold text-slate-700 text-[13px]">케어십구분</th>
