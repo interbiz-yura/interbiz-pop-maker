@@ -120,6 +120,12 @@ export interface CalculatedData {
   qrCode: string;           // QR코드 파일명
   benefits: string[];       // 케어서비스 혜택 4개
   careKey: string;
+  // 2번째 카드실적 (선납 금액별 가격표용)
+  discountAmount2: number;
+  discountPrice2: number;
+  cardMessage2: string;
+  prepay30monthly2: number;
+  prepay50monthly2: number;
 }
 
 // ==========================================
