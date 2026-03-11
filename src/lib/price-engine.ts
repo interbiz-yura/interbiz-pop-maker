@@ -219,6 +219,11 @@ export function calculatePatternB(
     qrCode,
     benefits,
     careKey: row.careKey,
+    discountAmount2: 0,
+    discountPrice2: 0,
+    cardMessage2: '',
+    prepay30monthly2: 0,
+    prepay50monthly2: 0,
   };
 }
 
@@ -258,6 +263,11 @@ export function calculatePatternA(
     qrCode: '',
     benefits: [],
     careKey: row.careKey,
+    discountAmount2: 0,
+    discountPrice2: 0,
+    cardMessage2: '',
+    prepay30monthly2: 0,
+    prepay50monthly2: 0,
   };
 }
 
