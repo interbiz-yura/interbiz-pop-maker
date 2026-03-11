@@ -100,22 +100,22 @@
         0.2038,
         0.4493
       ],
-      "font_size_pt": 48.0,
+      "font_size_pt": 43.0,
       "color": "#FFFFFF",
       "align": "right",
       "font_family": "G마켓 산스 TTF Bold",
-      "letter_spacing": "보통"
+      "letter_spacing": "좁게"
     },
     "실적02": {
       "position_ratio": [
         0.2038,
         0.7419
       ],
-      "font_size_pt": 48.0,
+      "font_size_pt": 43.0,
       "color": "#FFFFFF",
       "align": "right",
       "font_family": "G마켓 산스 TTF Bold",
-      "letter_spacing": "보통"
+      "letter_spacing": "좁게"
     },
     "선납할인": {
       "position_ratio": [
