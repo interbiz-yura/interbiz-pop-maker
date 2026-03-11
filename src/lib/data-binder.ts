@@ -64,8 +64,18 @@ export function bindValue(name: string, data: CalculatedData): string {
       return data.discountAmount > 0 ? formatNumber(data.discountAmount) : '';
 
     // ----- 제휴카드 혜택 총 구독 (할인가 × 72개월) -----
-    case '제휴카드 혜택 총 구독':
-      return data.discountPrice > 0 ? `${formatNumber(data.discountPrice * 72)}원` : '';
+
+      case '제휴카드 혜택 총 구독': {
+          if (data.discountPrice <= 0) return '';
+          const msg = data.cardMessage || '';
+          if (msg.includes('KB국민')) {
+            // KB국민: 1~60개월 + 61~72개월 (할인액 감소)
+            const late = data.discountPrice + data.discountAmount - (data.discountAmount <= 17000 ? 10000 : 15000);
+            const total = data.discountPrice * 60 + late * 12;
+            return `${formatNumber(total)}원`;
+          }
+          return `${formatNumber(data.discountPrice * 72)}원`;
+        }
 
     default:
       break;

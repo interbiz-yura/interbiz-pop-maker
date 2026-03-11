@@ -1,6 +1,6 @@
 import { PriceRow, CardInfo, CareBenefit, QRMapping, CalculatedData } from './types';
 
-const DEFAULT_DISCOUNT = 16000;
+const DEFAULT_DISCOUNT = 17000;
 
 // ==========================================
 // GetPriorityValue: S(6년)→P(5년)→M(4년) + K보너스

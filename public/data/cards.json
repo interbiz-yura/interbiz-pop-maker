@@ -1,65 +1,156 @@
 [
   {
-    "cardName": "롯데카드",
-    "monthUsage": "40만",
-    "discountAmount": 18000,
-    "message": "※ 롯데 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
-    "order": 1
-  },
-  {
-    "cardName": "롯데카드",
-    "monthUsage": "80만",
-    "discountAmount": 22000,
-    "message": "※ 롯데 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
-    "order": 2
-  },
-  {
-    "cardName": "롯데카드",
-    "monthUsage": "160만",
-    "discountAmount": 26000,
-    "message": "※ 롯데 제휴카드 프로모션 적용, 월 160만원 이상 사용 시",
-    "order": 3
-  },
-  {
-    "cardName": "신한카드",
+    "cardName": "[신한]더구독케어",
     "monthUsage": "30만",
-    "discountAmount": 16000,
+    "discountAmount": 17000,
     "message": "※ 신한 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
     "order": 1
   },
   {
-    "cardName": "신한카드",
+    "cardName": "[신한]더구독케어",
     "monthUsage": "70만",
-    "discountAmount": 26000,
+    "discountAmount": 27000,
     "message": "※ 신한 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
     "order": 2
   },
   {
-    "cardName": "신한카드",
+    "cardName": "[신한]더구독케어",
     "monthUsage": "130만",
     "discountAmount": 30000,
     "message": "※ 신한 제휴카드 프로모션 적용, 월 130만원 이상 사용 시",
     "order": 3
   },
   {
-    "cardName": "우리카드",
+    "cardName": "[우리]LG전자",
     "monthUsage": "30만",
-    "discountAmount": 16000,
+    "discountAmount": 17000,
     "message": "※ 우리 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
     "order": 1
   },
   {
-    "cardName": "우리카드",
+    "cardName": "[우리]LG전자",
     "monthUsage": "70만",
     "discountAmount": 22000,
     "message": "※ 우리 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
     "order": 2
   },
   {
-    "cardName": "우리카드",
+    "cardName": "[우리]LG전자",
     "monthUsage": "120만",
     "discountAmount": 24000,
-    "message": "※ 우리 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
+    "message": "※ 우리 제휴카드 프로모션 적용, 월 120만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "[롯데]구독엔로카",
+    "monthUsage": "40만",
+    "discountAmount": 19000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[롯데]구독엔로카",
+    "monthUsage": "80만",
+    "discountAmount": 22000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[롯데]구독엔로카",
+    "monthUsage": "160만",
+    "discountAmount": 26000,
+    "message": "※ 롯데 제휴카드 프로모션 적용, 월 160만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "[KB국민]LG전자",
+    "monthUsage": "30만",
+    "discountAmount": 17000,
+    "message": "※ KB국민 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[KB국민]LG전자",
+    "monthUsage": "80만",
+    "discountAmount": 22000,
+    "message": "※ KB국민 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[하나]LG전자플러스",
+    "monthUsage": "30만",
+    "discountAmount": 13000,
+    "message": "※ 하나 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[하나]LG전자플러스",
+    "monthUsage": "70만",
+    "discountAmount": 17000,
+    "message": "※ 하나 제휴카드 프로모션 적용, 월 70만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[하나]LG전자플러스",
+    "monthUsage": "100만",
+    "discountAmount": 20000,
+    "message": "※ 하나 제휴카드 프로모션 적용, 월 100만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "[NH]올원LG전자",
+    "monthUsage": "30만",
+    "discountAmount": 10000,
+    "message": "※ NH 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[NH]올원LG전자",
+    "monthUsage": "60만",
+    "discountAmount": 15000,
+    "message": "※ NH 제휴카드 프로모션 적용, 월 60만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[NH]올원LG전자",
+    "monthUsage": "100만",
+    "discountAmount": 20000,
+    "message": "※ NH 제휴카드 프로모션 적용, 월 100만원 이상 사용 시",
+    "order": 3
+  },
+  {
+    "cardName": "[광주전북]베스트케어",
+    "monthUsage": "30만",
+    "discountAmount": 8000,
+    "message": "※ 광주전북 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[광주전북]베스트케어",
+    "monthUsage": "100만",
+    "discountAmount": 20000,
+    "message": "※ 광주전북 제휴카드 프로모션 적용, 월 100만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[우리]LG전자 플래티늄",
+    "monthUsage": "100만",
+    "discountAmount": 35000,
+    "message": "※ 우리 플래티늄 제휴카드 프로모션 적용, 월 100만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[우리]LG전자 플래티늄",
+    "monthUsage": "150만",
+    "discountAmount": 39000,
+    "message": "※ 우리 플래티늄 제휴카드 프로모션 적용, 월 150만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[우리]LG전자 플래티늄",
+    "monthUsage": "200만",
+    "discountAmount": 42000,
+    "message": "※ 우리 플래티늄 제휴카드 프로모션 적용, 월 200만원 이상 사용 시",
     "order": 3
   }
 ]

@@ -152,8 +152,8 @@ export default function PopMakerPage() {
   const [channel, setChannel] = useState(CHANNELS[0]);
   const [priceDates, setPriceDates] = useState<string[]>([]);
   const [latestDate, setLatestDate] = useState('');
-  const [cardName, setCardName] = useState('');
-  const [monthUsage, setMonthUsage] = useState('');
+  const [cardName, setCardName] = useState('[신한]더구독케어');
+  const [monthUsage, setMonthUsage] = useState('30만');
   const [activationOn, setActivationOn] = useState(false);
   const [qrOn, setQrOn] = useState(true);
   const [showSuffix, setShowSuffix] = useState(false);
@@ -657,8 +657,15 @@ export default function PopMakerPage() {
     });
   }, [changeTableData, checkedModels]);
 
-  // ----- 카드 변경 시 월실적 리셋 -----
-  useEffect(() => { setMonthUsage(''); }, [cardName]);
+  // ----- 카드 변경 시 해당 카드 첫 번째 월실적으로 자동 설정 -----
+  useEffect(() => {
+    if (cardName) {
+      const usages = getUsagesByCard(cards, cardName);
+      setMonthUsage(usages.length > 0 ? usages[0] : '');
+    } else {
+      setMonthUsage('');
+    }
+  }, [cardName, cards]);
 
   useEffect(() => {
     const filtered = templates.filter(t => t.channel?.includes(channel.id));
@@ -1069,14 +1076,21 @@ export default function PopMakerPage() {
 
 return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans">
+      {/* 상단 헤더 */}
       <header className="bg-white border-b border-gray-200 px-7 h-16 flex items-center justify-between shrink-0">
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-3">
+          {/* 👇 반짝이 이모지 대신 요청하신 회사 로고 이미지 추가 */}
+          <img 
+            src="https://cdn.imweb.me/upload/S202407200b6b0c77cbd4a/57662c681acb4.png" 
+            alt="Company Logo" 
+            className="h-4 object-contain" 
+          />
           <span className="text-xl">✨</span>
           <h1 className="text-xl font-extrabold text-slate-800 tracking-tight">LG POP Maker</h1>
+
         </div>
         <div className="flex items-center gap-3">
-          {latestDate && <span className="text-xs text-slate-400">최신: {formatDateStr(latestDate)}</span>}
-          {latestDate && <span className="text-xs text-slate-400">📊 {formatDateStr(latestDate)}</span>}
+          {latestDate && <span className="text-xs text-slate-400">📊 가격 기준일: {formatDateStr(latestDate)}</span>}
           <span className="text-xs text-slate-500 font-semibold bg-slate-100 px-2.5 py-1 rounded-md">모델 {totalModels}개 로드</span>
         </div>
       </header>
@@ -1161,19 +1175,19 @@ return (
                 onChange={(e) => setCardName(e.target.value)}
                 className="w-full p-2.5 rounded-lg border border-gray-200 text-sm bg-gray-50 outline-none cursor-pointer text-slate-700"
               >
-                <option value="">카드 미선택 (기본 16,000원)</option>
+
                 {uniqueCardNames.map((name: string) => (
                   <option key={name} value={name}>{name}</option>
                 ))}
               </select>
               
-              {cardName && usageList.length > 0 && !isPrepayDetailTemplate && (
+              {usageList.length > 0 && !isPrepayDetailTemplate && (
                 <select
                   value={monthUsage}
                   onChange={(e) => setMonthUsage(e.target.value)}
                   className="w-full p-2.5 rounded-lg border border-gray-200 text-sm bg-gray-50 outline-none cursor-pointer text-slate-700 mt-2"
                 >
-                  <option value="">월실적 선택...</option>
+  
                   {usageList.map((u: string) => (
                     <option key={u} value={u}>{u}</option>
                   ))}

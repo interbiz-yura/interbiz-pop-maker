@@ -8,8 +8,14 @@ const FONT_MAP: Record<string, { file: string; family: string }> = {
   'LG스마트체 Light': { file: '/fonts/LGSMHAL.TTF', family: 'LGSmartLight' },
   'LG스마트체 Regular': { file: '/fonts/LGSMHAR.TTF', family: 'LGSmartRegular' },
   'LG스마트체 SemiBold': { file: '/fonts/LGSMHASB.TTF', family: 'LGSmartSemiBold' },
+  'G마켓 산스 TTF Bold': { file: '/fonts/GmarketSansTTFBold.ttf', family: 'GmarketSansTTFBold' },
+  'G마켓 산스 TTF Medium': { file: '/fonts/GmarketSansTTFMedium.ttf', family: 'GmarketSansTTFMedium' },
+  'G마켓 산스 TTF Light': { file: '/fonts/GmarketSansTTFLight.ttf', family: 'GmarketSansTTFLight' },
+  'G마켓 산스 Bold': { file: '/fonts/GmarketSansBold.otf', family: 'GmarketSansBold' },
+  'G마켓 산스 Medium': { file: '/fonts/GmarketSansMedium.otf', family: 'GmarketSansMedium' },
+  'G마켓 산스 Light': { file: '/fonts/GmarketSansLight.otf', family: 'GmarketSansLight' },
   '맑은 고딕': { file: '', family: 'Malgun Gothic, sans-serif' },
-  '맑은 고딕 Semilight': { file: '', family: 'Malgun Gothic, sans-serif' },
+  '맑은 고딕 Semilight': { file: '', family: 'Malgun Gothic Semilight, Malgun Gothic, sans-serif' },
 };
 
 // 폰트 로딩 캐시
