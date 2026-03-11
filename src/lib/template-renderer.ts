@@ -8,6 +8,8 @@ const FONT_MAP: Record<string, { file: string; family: string }> = {
   'LG스마트체 Light': { file: '/fonts/LGSMHAL.TTF', family: 'LGSmartLight' },
   'LG스마트체 Regular': { file: '/fonts/LGSMHAR.TTF', family: 'LGSmartRegular' },
   'LG스마트체 SemiBold': { file: '/fonts/LGSMHASB.TTF', family: 'LGSmartSemiBold' },
+  '맑은 고딕': { file: '', family: 'Malgun Gothic, sans-serif' },
+  '맑은 고딕 Semilight': { file: '', family: 'Malgun Gothic, sans-serif' },
 };
 
 // 폰트 로딩 캐시
@@ -157,13 +159,14 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
     const x = ratioX * width;
     const y = ratioY * height;
 
-    // 폰트 크기: pt → px 변환 (템플릿의 기준 해상도에 맞게)
+// 폰트 크기: pt → px 변환 (템플릿의 기준 해상도에 맞게)
     // 원본 파이썬에서는 pt를 직접 사용했으므로 비율 유지
     const fontSizePx = Math.max(8, Math.round(textDef.font_size_pt * 4.0));
     const fontFamily = getCanvasFontFamily(textDef.font_family);
     const spacing = getLetterSpacingPx(textDef.letter_spacing, fontSizePx);
 
-    ctx.font = `${fontSizePx}px ${fontFamily}`;
+    const boldPrefix = textDef.bold ? 'bold ' : '';
+    ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
     ctx.fillStyle = textDef.color;
     ctx.textAlign = textDef.align;
     ctx.textBaseline = 'middle';
@@ -275,7 +278,18 @@ export async function renderBatch(
       await new Promise<void>((resolve) => {
         const img = new Image();
         img.onload = () => {
-          ctx.drawImage(img, x, y, cellW, cellH);
+          // 비율 유지하며 셀 안에 맞추기
+          const imgRatio = img.width / img.height;
+          const cellRatio = cellW / cellH;
+          let drawW = cellW, drawH = cellH, drawX = x, drawY = y;
+          if (imgRatio > cellRatio) {
+            drawH = cellW / imgRatio;
+            drawY = y + (cellH - drawH) / 2;
+          } else {
+            drawW = cellH * imgRatio;
+            drawX = x + (cellW - drawW) / 2;
+          }
+          ctx.drawImage(img, drawX, drawY, drawW, drawH);
           resolve();
         };
         img.onerror = () => resolve();

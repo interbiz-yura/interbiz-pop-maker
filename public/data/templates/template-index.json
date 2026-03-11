@@ -1,5 +1,4 @@
 [
-  { "id": "emart-a6-qr", "name": "A6 QR코드", "file": "A6 이마트 QR코드.json", "channel": ["emart"], "qr": true, "prepay": false },
   { "id": "basic-qr", "name": "구독 기본 가격표(QR코드)", "file": "구독 기본 가격표(QR코드).json", "channel": ["emart", "homeplus", "electromart"], "qr": true, "prepay": false },
   { "id": "basic", "name": "구독 기본 가격표", "file": "구독 기본 가격표.json", "channel": ["emart", "homeplus", "electromart"], "qr": false, "prepay": false },
   { "id": "et-basic-qr", "name": "ET 구독 기본 가격표(QR코드)", "file": "ET 구독 기본 가격표(QR코드).json", "channel": ["traders"], "qr": true, "prepay": false },
@@ -13,5 +12,10 @@
   { "id": "a5-prepay-emart", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 이마트.json", "channel": ["emart"], "qr": false, "prepay": true },
   { "id": "a5-prepay-elec", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 일렉.json", "channel": ["electromart"], "qr": false, "prepay": true },
   { "id": "a5-prepay-traders", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 트레이더스.json", "channel": ["traders"], "qr": false, "prepay": true },
-  { "id": "a5-prepay-homeplus", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": true }
+  { "id": "a5-prepay-homeplus", "name": "구독 선납 가격표(가로형)", "file": "A5 구독 선납 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": true },
+  { "id": "hmdb-qr", "name": "혼매동부산 요청 가격표(QR코드)", "file": "혼매동부산 요청 가격표(QR코드).json", "channel": ["emart", "homeplus", "electromart"], "qr": true, "prepay": false },
+  { "id": "et-hmdb-qr", "name": "혼매동부산 요청 가격표(QR코드)", "file": "ET 혼매동부산 요청 가격표(QR코드).json", "channel": ["traders"], "qr": true, "prepay": false },
+  { "id": "prepay-detail-emart", "name": "선납+제휴카드 실적 구간별 가격표", "file": "이마트 선납 금액별 가격표.json", "channel": ["emart"], "qr": false, "prepay": true },
+  { "id": "prepay-detail-elec", "name": "선납+제휴카드 실적 구간별 가격표", "file": "일렉 선납 금액별 가격표.json", "channel": ["electromart"], "qr": false, "prepay": true },
+  { "id": "prepay-detail-homeplus", "name": "선납+제휴카드 실적 구간별 가격표", "file": "홈플 선납 금액별 가격표.json", "channel": ["homeplus"], "qr": false, "prepay": true }
 ]
