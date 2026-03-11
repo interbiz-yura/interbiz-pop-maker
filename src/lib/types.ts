@@ -69,6 +69,7 @@ export interface TemplateText {
   align: 'left' | 'center' | 'right';
   font_family: string;
   letter_spacing: string;
+  bold?: boolean;
 }
 
 export interface TemplateQRSettings {
