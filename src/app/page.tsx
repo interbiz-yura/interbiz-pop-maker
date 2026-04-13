@@ -1869,6 +1869,9 @@ return (
           </div>
         </div>
       </div>
+      <footer className="text-center py-3 text-[11px] text-slate-400">
+        Developed by 인터비즈 오유라
+      </footer>
     </div>
   );
 }
