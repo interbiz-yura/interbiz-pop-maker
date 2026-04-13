@@ -6,7 +6,7 @@ import {
   getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber
 } from '@/lib/price-engine';
 import {
-  parseExcelForCompare, comparePriceData,
+  parseExcelForCompare, parseNewExcelForCompare, comparePriceData,
   type CompareResult, type ChangeStatus
 } from '@/lib/price-compare';
 import { loadTemplate } from '@/lib/data-loader';
@@ -29,10 +29,11 @@ interface TemplateInfo {
 // 채널 정의
 // ==========================================
 const CHANNELS = [
-  { id: 'emart', name: '이마트', sheet: '이마트-업데이트' },
-  { id: 'homeplus', name: '홈플러스', sheet: '홈플러스-업데이트' },
-  { id: 'traders', name: '트레이더스', sheet: '이마트-업데이트' },
-  { id: 'electromart', name: '일렉트로마트', sheet: '이마트-업데이트' },
+  { id: 'emart', name: '이마트', sheet: '이마트-업데이트', sheetNew: '이마트' },
+  { id: 'homeplus', name: '홈플러스', sheet: '홈플러스-업데이트', sheetNew: '홈플러스' },
+  { id: 'traders', name: '트레이더스', sheet: '이마트-업데이트', sheetNew: '이마트' },
+  { id: 'electromart', name: '일렉트로마트', sheet: '이마트-업데이트', sheetNew: '이마트' },
+  { id: 'electroland', name: '전자랜드', sheet: '이마트-업데이트', sheetNew: '전자랜드' },
 ];
 
 // ==========================================
@@ -83,6 +84,119 @@ async function parseExcelFromURL(url: string, sheetName: string): Promise<PriceR
       prepay50amount: num(25), prepay50base: num(26), prepay50new: num(27), prepay50exist: num(28),
     });
   }
+  return rows;
+}
+
+// ==========================================
+// 신규 양식 엑셀 파서 (Master_*.xlsx)
+// ==========================================
+async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]> {
+  const XLSX = await import('xlsx');
+  const res = await fetch(url);
+  if (!res.ok) throw new Error(`파일 로드 실패: ${url} (${res.status})`);
+  const contentType = res.headers.get('content-type') || '';
+  if (contentType.includes('text/html')) throw new Error(`잘못된 응답 (HTML): ${url}`);
+  const buf = await res.arrayBuffer();
+  const wb = XLSX.read(buf, { type: 'array' });
+  const ws = wb.Sheets[sheetName];
+  if (!ws) {
+    console.warn(`[POP] 시트 '${sheetName}'를 찾을 수 없음. 사용 가능: ${wb.SheetNames.join(', ')}`);
+    return [];
+  }
+
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+  const cell = (r: number, c: number) => ws[XLSX.utils.encode_cell({ r, c })]?.v;
+  const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
+  const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
+
+  // 1행부터 데이터 (0행은 헤더)
+  interface RawEntry {
+    row: number;
+    category: string; model: string; careType: string; careGrade: string; visitCycle: string;
+    period: number; comboType: string;
+    listPrice: number; finalPrice: number; activation: number;
+    prepay30amount: number; prepay30final: number;
+    prepay50amount: number; prepay50final: number;
+  }
+
+  const entries: RawEntry[] = [];
+  for (let r = 1; r <= range.e.r; r++) {
+    const model = str(r, 1); // B열 = 모델명
+    if (!model) continue;
+    entries.push({
+      row: r,
+      category: str(r, 0),    // A열
+      model,
+      careType: str(r, 2),    // C열
+      careGrade: str(r, 3),   // D열
+      visitCycle: str(r, 4),  // E열
+      period: num(r, 5),      // F열 (36/48/60/72)
+      comboType: str(r, 6),   // G열 (결합없음/신규결합/기존결합)
+      listPrice: num(r, 7),   // H열
+      finalPrice: num(r, 11), // L열 (최종요금)
+      activation: num(r, 10), // K열
+      prepay30amount: num(r, 12), // M열
+      prepay30final: num(r, 13),  // N열
+      prepay50amount: num(r, 14), // O열
+      prepay50final: num(r, 15),  // P열
+    });
+  }
+
+  // 같은 (모델명+케어십형태+케어십구분+방문주기)로 그룹핑
+  const groups = new Map<string, RawEntry[]>();
+  for (const e of entries) {
+    const key = `${e.model}|${e.careType}|${e.careGrade}|${e.visitCycle}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(e);
+  }
+
+  const rows: PriceRow[] = [];
+  groups.forEach((group) => {
+    const first = group[0];
+    const find = (period: number, combo: string) =>
+      group.find((e: RawEntry) => e.period === period && e.comboType === combo);
+
+    const y3none = find(36, '결합없음');
+    const y4none = find(48, '결합없음');
+    const y4new  = find(48, '신규결합');
+    const y4ext  = find(48, '기존결합');
+    const y5none = find(60, '결합없음');
+    const y5new  = find(60, '신규결합');
+    const y5ext  = find(60, '기존결합');
+    const y6none = find(72, '결합없음');
+    const y6new  = find(72, '신규결합');
+    const y6ext  = find(72, '기존결합');
+
+    rows.push({
+      channel: '',
+      category: first.category,
+      model: first.model,
+      listPrice: first.listPrice,
+      careType: first.careType,
+      careGrade: first.careGrade,
+      visitCycle: first.visitCycle,
+      careKey: '',
+      activation: y6none?.activation || y5none?.activation || y4none?.activation || 0,
+      y3base: y3none?.finalPrice || 0,
+      y4base: y4none?.finalPrice || 0,
+      y4new:  y4new?.finalPrice || 0,
+      y4exist: y4ext?.finalPrice || 0,
+      y5base: y5none?.finalPrice || 0,
+      y5new:  y5new?.finalPrice || 0,
+      y5exist: y5ext?.finalPrice || 0,
+      y6base: y6none?.finalPrice || 0,
+      y6new:  y6new?.finalPrice || 0,
+      y6exist: y6ext?.finalPrice || 0,
+      prepay30amount: y6none?.prepay30amount || 0,
+      prepay30base:   y6none?.prepay30final || 0,
+      prepay30new:    y6new?.prepay30final || 0,
+      prepay30exist:  y6ext?.prepay30final || 0,
+      prepay50amount: y6none?.prepay50amount || 0,
+      prepay50base:   y6none?.prepay50final || 0,
+      prepay50new:    y6new?.prepay50final || 0,
+      prepay50exist:  y6ext?.prepay50final || 0,
+    });
+  });
   return rows;
 }
 
@@ -151,6 +265,7 @@ export default function PopMakerPage() {
   // ----- UI 상태 -----
   const [channel, setChannel] = useState(CHANNELS[0]);
   const [priceDates, setPriceDates] = useState<string[]>([]);
+  const [priceFiles, setPriceFiles] = useState<string[]>([]);
   const [latestDate, setLatestDate] = useState('');
   const [cardName, setCardName] = useState('[신한]더구독케어');
   const [monthUsage, setMonthUsage] = useState('30만');
@@ -210,29 +325,44 @@ export default function PopMakerPage() {
         setError(null);
 
         // price-index.json에서 파일 목록 로드
-        let dates: string[] = [];
+        let files: string[] = [];
         try {
           const indexRes = await fetch('/data/price-index.json');
-          const files: string[] = await indexRes.json();
-          // 파일명에서 날짜 추출: price_260303.xlsx → 260303
-          dates = files.map(f => f.replace('price_', '').replace('.xlsx', '')).sort();
+          files = await indexRes.json();
         } catch {
           console.warn('price-index.json 로드 실패');
         }
-        setPriceDates(dates);
 
+        // 파일명에서 날짜(6자리) 추출
+        const extractDate = (f: string): string => {
+          if (f.startsWith('Master_')) {
+            // Master_20260411.xlsx → 260411 (앞 "20" 제거)
+            return f.replace('Master_', '').replace('.xlsx', '').slice(2);
+          }
+          // price_260303.xlsx → 260303
+          return f.replace('price_', '').replace('.xlsx', '');
+        };
+        const dates = files.map(extractDate).sort();
+        setPriceDates(dates);
+        setPriceFiles(files);
+
+        const latestFile = files[files.length - 1] || '';
         const latest = dates[dates.length - 1] || '';
         setLatestDate(latest);
         if (!latest) throw new Error('가격표 파일이 없습니다.');
 
+        const parsePrice = latestFile.startsWith('Master_')
+          ? parseNewExcel(`/data/${latestFile}`, channel.sheetNew || channel.sheet)
+          : parseExcelFromURL(`/data/${latestFile}`, channel.sheet);
+
         const [price, cardData, qr, care] = await Promise.all([
-          parseExcelFromURL(`/data/price_${latest}.xlsx`, channel.sheet),
+          parsePrice,
           loadCards(),
           loadQRMapping(),
           loadCareBenefits(),
         ]);
         setPriceData(price);
-        console.log(`[POP] price_${latest}.xlsx → ${price.length}행 로드, activation>0: ${price.filter(r => (r.activation||0) > 0).length}개`);
+        console.log(`[POP] ${latestFile} → ${price.length}행 로드, activation>0: ${price.filter(r => (r.activation||0) > 0).length}개`);
         setCards(cardData);
         setQrMapping(qr);
         setCareBenefits(care);
@@ -303,11 +433,31 @@ export default function PopMakerPage() {
       setCompareLoading(true);
       setSelectedCompareDate(oldDate);
 
-      // 비교 엔진용 파싱 + 삭제 모델 표시용 전체 PriceRow 파싱
+      // 날짜 → 파일명 찾기
+      const findFile = (date: string) => {
+        const found = priceFiles.find(f => {
+          if (f.startsWith('Master_')) return f.replace('Master_', '').replace('.xlsx', '').slice(2) === date;
+          return f.replace('price_', '').replace('.xlsx', '') === date;
+        });
+        return found || `price_${date}.xlsx`;
+      };
+      const oldFile = findFile(oldDate);
+      const currFile = findFile(latestDate);
+
+      // 파일 형식에 따라 파서 선택
+      const parseCompare = (file: string) =>
+        file.startsWith('Master_')
+          ? parseNewExcelForCompare(`/data/${file}`, channel.sheetNew || channel.sheet)
+          : parseExcelForCompare(`/data/${file}`, channel.sheet);
+      const parseFull = (file: string) =>
+        file.startsWith('Master_')
+          ? parseNewExcel(`/data/${file}`, channel.sheetNew || channel.sheet)
+          : parseExcelFromURL(`/data/${file}`, channel.sheet);
+
       const [prevRowsCompare, currRowsCompare, prevFull] = await Promise.all([
-        parseExcelForCompare(`/data/price_${oldDate}.xlsx`, channel.sheet),
-        parseExcelForCompare(`/data/price_${latestDate}.xlsx`, channel.sheet),
-        parseExcelFromURL(`/data/price_${oldDate}.xlsx`, channel.sheet),
+        parseCompare(oldFile),
+        parseCompare(currFile),
+        parseFull(oldFile),
       ]);
 
       const result = comparePriceData(prevRowsCompare, currRowsCompare);
@@ -320,7 +470,7 @@ export default function PopMakerPage() {
     } finally {
       setCompareLoading(false);
     }
-  }, [latestDate, channel.sheet]);
+  }, [latestDate, channel.sheet, channel.sheetNew, priceFiles]);
 
   // ----- 모델별 그룹핑 -----
   const categoryModelGroups = useMemo(() => {

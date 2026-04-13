@@ -108,6 +108,55 @@ export async function parseExcelForCompare(url: string, sheetName: string): Prom
   return rows;
 }
 
+// 신규 양식 엑셀 파싱 (비교 전용, Master_*.xlsx)
+export async function parseNewExcelForCompare(url: string, sheetName: string): Promise<RawRow[]> {
+  const XLSX = await import('xlsx');
+  const res = await fetch(url);
+  const buf = await res.arrayBuffer();
+  const wb = XLSX.read(buf, { type: 'array' });
+  const ws = wb.Sheets[sheetName];
+  if (!ws) return [];
+
+  const range = XLSX.utils.decode_range(ws['!ref'] || 'A1');
+  const cell = (r: number, c: number) => ws[XLSX.utils.encode_cell({ r, c })]?.v;
+  const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
+  const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
+
+  interface Entry { model: string; category: string; careType: string; careGrade: string; visitCycle: string; period: number; comboType: string; finalPrice: number; }
+  const entries: Entry[] = [];
+  for (let r = 1; r <= range.e.r; r++) {
+    const model = str(r, 1);
+    if (!model) continue;
+    entries.push({
+      model, category: str(r, 0), careType: str(r, 2), careGrade: str(r, 3), visitCycle: str(r, 4),
+      period: num(r, 5), comboType: str(r, 6), finalPrice: num(r, 11),
+    });
+  }
+
+  // 같은 (모델명+케어십형태+케어십구분+방문주기)로 그룹핑
+  const groups = new Map<string, Entry[]>();
+  for (const e of entries) {
+    const key = `${e.model}|${e.careType}|${e.careGrade}|${e.visitCycle}`;
+    if (!groups.has(key)) groups.set(key, []);
+    groups.get(key)!.push(e);
+  }
+
+  const rows: RawRow[] = [];
+  groups.forEach((group) => {
+    const first = group[0];
+    const find = (period: number, combo: string) => group.find((e: Entry) => e.period === period && e.comboType === combo);
+    rows.push({
+      model: first.model, category: first.category,
+      careType: first.careType, careGrade: first.careGrade, visitCycle: first.visitCycle,
+      y3base: find(36, '결합없음')?.finalPrice || 0,
+      y4base: find(48, '결합없음')?.finalPrice || 0,
+      y5base: find(60, '결합없음')?.finalPrice || 0,
+      y6base: find(72, '결합없음')?.finalPrice || 0,
+    });
+  });
+  return rows;
+}
+
 // 행의 고유 키 생성
 function rowKey(row: RawRow): string {
   return `${row.model}|${row.careType}|${row.careGrade}|${row.visitCycle}`;
