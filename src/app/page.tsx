@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { loadCards, loadQRMapping, loadCareBenefits } from '@/lib/data-loader';
 import {
   getCardDiscount, getUniqueCardNames, getUsagesByCard, formatNumber
@@ -816,6 +816,15 @@ export default function PopMakerPage() {
       setMonthUsage('');
     }
   }, [cardName, cards]);
+
+  // ----- 활성화 탭에서 빠져나가면 드롭다운 초기화 -----
+  const prevCategory = useRef(activeCategory);
+  useEffect(() => {
+    if (prevCategory.current === '활성화 제품' && activeCategory !== '활성화 제품') {
+      setModelSelections({});
+    }
+    prevCategory.current = activeCategory;
+  }, [activeCategory]);
 
   useEffect(() => {
     const filtered = templates.filter(t => t.channel?.includes(channel.id));
@@ -1638,7 +1647,31 @@ return (
           {/* 상단 탭 영역 */}
           <div className="px-6 pt-5 pb-4 border-b border-gray-100 bg-white z-20 shrink-0">
             <div className="flex gap-2 mb-4">
-              <FilterButton active={activeCategory === "활성화 제품"} onClick={() => setActiveCategory("활성화 제품")} activeColor="text-orange-600 bg-orange-50 border-orange-200 shadow-sm">
+              <FilterButton active={activeCategory === "활성화 제품"} onClick={() => {
+                const newSelections: Record<string, { period: string; careType: string; careGrade: string; visitCycle: string }> = {};
+                Object.values(activationModelGroups).flat().forEach((group: ModelGroup) => {
+                  const periodKeys: { key: keyof PriceRow; period: string }[] = [
+                    { key: 'y6base', period: '6년' },
+                    { key: 'y5base', period: '5년' },
+                    { key: 'y4base', period: '4년' },
+                    { key: 'y3base', period: '3년' },
+                  ];
+                  for (const { key, period } of periodKeys) {
+                    const actRow = group.rows.find((r: PriceRow) => (r.activation || 0) > 0 && ((r[key] as number) || 0) > 0);
+                    if (actRow) {
+                      newSelections[group.model] = {
+                        period,
+                        careType: actRow.careType || '',
+                        careGrade: actRow.careGrade || '',
+                        visitCycle: actRow.visitCycle || '',
+                      };
+                      break;
+                    }
+                  }
+                });
+                setModelSelections(prev => ({ ...prev, ...newSelections }));
+                setActiveCategory("활성화 제품");
+              }} activeColor="text-orange-600 bg-orange-50 border-orange-200 shadow-sm">
                 활성화 제품 ({activationCount})
               </FilterButton>
               <FilterButton active={activeCategory === "변동 제품"} onClick={() => setActiveCategory("변동 제품")} activeColor="text-purple-600 bg-purple-50 border-purple-200 shadow-sm">
