@@ -315,7 +315,7 @@ export default function PopMakerPage() {
   const isPrepayDetailTemplate = template.id?.includes('prepay-detail') || false;
 
   const [showPrintDialog, setShowPrintDialog] = useState(false);
-  const [printSize, setPrintSize] = useState<'기본' | 'A4' | 'A5' | 'A6'>('기본');
+  const [printSize, setPrintSize] = useState<'기본' | 'A4' | 'A5' | 'A6' | '90x55'>('기본');
 
   // ----- 데이터 로딩 -----
   useEffect(() => {
@@ -947,12 +947,14 @@ export default function PopMakerPage() {
             if (printSize === 'A4') return isLandscape ? '가로' : '세로';
             if (printSize === 'A5') return isLandscape ? '세로' : '가로';
             if (printSize === 'A6') return isLandscape ? '가로' : '세로';
+            if (printSize === '90x55') return '세로';
             return '가로';
           })();
           const sizeConfig = {
             'A4': { cols: 1, rows: 1, w_mm: autoOrientation === '가로' ? 297 : 210, h_mm: autoOrientation === '가로' ? 210 : 297 },
             'A5': { cols: 1, rows: 2, w_mm: autoOrientation === '세로' ? 210 : 297, h_mm: autoOrientation === '세로' ? 148 : 105 },
             'A6': { cols: 2, rows: 2, w_mm: isLandscape ? 148 : 105, h_mm: isLandscape ? 105 : 148 },
+            '90x55': { cols: 2, rows: 5, w_mm: 90, h_mm: 55 },
           }[printSize]!;
 
           tmpl.batch_enabled = true;
@@ -1436,8 +1438,8 @@ return (
                 <div className="flex-1">
                   <div className="text-xs font-bold text-slate-500 mb-3">용지 크기 선택</div>
                   <div className="flex flex-col gap-2.5">
-                    {["기본", "A4", "A5", "A6"].filter((size) => !(size === "A4" && !templateBatchEnabled)).map((size) => {
-                      const desc = size === "기본" ? (templateBatchEnabled ? `${templateBatch?.grid_cols || 2}×${templateBatch?.grid_rows || 2} 배치` : "A4 1장") : size === "A4" ? "1개 / A4 1장" : size === "A5" ? "2개 / A4 1장" : "4개 / A4 1장";
+                    {["기본", "A4", "A5", "A6", "90x55"].filter((size) => !(size === "A4" && !templateBatchEnabled)).map((size) => {
+                      const desc = size === "기본" ? (templateBatchEnabled ? `${templateBatch?.grid_cols || 2}×${templateBatch?.grid_rows || 2} 배치` : "A4 1장") : size === "A4" ? "1개 / A4 1장" : size === "A5" ? "2개 / A4 1장" : size === "90x55" ? "10개 / A4 1장" : "4개 / A4 1장";
                       const isSelected = printSize === size;
                       
                       return (
@@ -1482,8 +1484,10 @@ return (
                       cols = 1; rows = 1; orient = isLandscapeTmpl ? "가로" : "세로";
                     } else if (printSize === "A5") {
                       cols = isLandscapeTmpl ? 1 : 2; rows = isLandscapeTmpl ? 2 : 1; orient = isLandscapeTmpl ? "세로" : "가로";
-                    } else {
+                    } else if (printSize === "A6") {
                       cols = 2; rows = 2; orient = isLandscapeTmpl ? "가로" : "세로";
+                    } else {
+                      cols = 2; rows = 5; orient = "세로";
                     }
                     const perPage = cols * rows;
                     const totalPages = Math.ceil(checkedModels.size / perPage);
