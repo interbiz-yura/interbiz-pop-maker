@@ -1,4 +1,9 @@
 [
+  { "id": "hmh-official-homeplus", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": false },
+  { "id": "hmh-official-emart", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 이마트.json", "channel": ["emart"], "qr": false, "prepay": false },
+  { "id": "hmh-official-elec", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 일렉.json", "channel": ["electromart"], "qr": false, "prepay": false },
+  { "id": "hmh-official-traders", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 트레이더스.json", "channel": ["traders"], "qr": false, "prepay": false },
+  { "id": "hmh-official-electroland", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 전자랜드.json", "channel": ["electroland"], "qr": false, "prepay": false },
   { "id": "basic-qr", "name": "구독 기본 가격표(QR코드)", "file": "구독 기본 가격표(QR코드).json", "channel": ["emart", "homeplus", "electromart"], "qr": true, "prepay": false },
   { "id": "basic", "name": "구독 기본 가격표", "file": "구독 기본 가격표.json", "channel": ["emart", "homeplus", "electromart"], "qr": false, "prepay": false },
   { "id": "et-basic-qr", "name": "ET 구독 기본 가격표(QR코드)", "file": "ET 구독 기본 가격표(QR코드).json", "channel": ["traders"], "qr": true, "prepay": false },
@@ -17,10 +22,5 @@
   { "id": "et-hmdb-qr", "name": "혼매동부산 요청 가격표(QR코드)", "file": "ET 혼매동부산 요청 가격표(QR코드).json", "channel": ["traders"], "qr": true, "prepay": false },
   { "id": "prepay-detail-emart", "name": "선납+제휴카드 실적 구간별 가격표", "file": "이마트 선납 금액별 가격표.json", "channel": ["emart"], "qr": false, "prepay": true },
   { "id": "prepay-detail-elec", "name": "선납+제휴카드 실적 구간별 가격표", "file": "일렉 선납 금액별 가격표.json", "channel": ["electromart"], "qr": false, "prepay": true },
-  { "id": "prepay-detail-homeplus", "name": "선납+제휴카드 실적 구간별 가격표", "file": "홈플 선납 금액별 가격표.json", "channel": ["homeplus"], "qr": false, "prepay": true },
-  { "id": "hmh-official-homeplus", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 홈플러스.json", "channel": ["homeplus"], "qr": false, "prepay": false },
-  { "id": "hmh-official-emart", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 이마트.json", "channel": ["emart"], "qr": false, "prepay": false },
-  { "id": "hmh-official-elec", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 일렉.json", "channel": ["electromart"], "qr": false, "prepay": false },
-  { "id": "hmh-official-traders", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 트레이더스.json", "channel": ["traders"], "qr": false, "prepay": false },
-  { "id": "hmh-official-electroland", "name": "혼매향 구독가격표 공식포맷", "file": "혼매향 구독가격표 공식포맷 전자랜드.json", "channel": ["electroland"], "qr": false, "prepay": false }
+  { "id": "prepay-detail-homeplus", "name": "선납+제휴카드 실적 구간별 가격표", "file": "홈플 선납 금액별 가격표.json", "channel": ["homeplus"], "qr": false, "prepay": true }
 ]
