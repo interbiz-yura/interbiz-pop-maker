@@ -1413,6 +1413,9 @@ return (
               )}
             </button>
           </div>
+          <div className="text-center mt-3 text-[10px] text-slate-400">
+            Developed by 인터비즈 오유라
+          </div>
         </div>
 
         {/* --- 출력 설정 모달 --- */}
@@ -1869,9 +1872,6 @@ return (
           </div>
         </div>
       </div>
-      <footer className="text-center py-3 text-[11px] text-slate-400">
-        Developed by 인터비즈 오유라
-      </footer>
     </div>
   );
 }
