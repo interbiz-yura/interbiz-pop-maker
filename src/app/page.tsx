@@ -175,7 +175,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       careType: first.careType,
       careGrade: first.careGrade,
       visitCycle: first.visitCycle,
-      careKey: '',
+      careKey: (!first.careType || first.careType === '무관리') ? '무관리' : `${first.careType}/${first.visitCycle}/${first.careGrade}`,
       activation: y6none?.activation || y5none?.activation || y4none?.activation || y3none?.activation || 0,
       y3base: y3none?.finalPrice || 0,
       y4base: y4none?.finalPrice || 0,
