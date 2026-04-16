@@ -51,6 +51,14 @@ export function bindValue(name: string, data: CalculatedData): string {
     case '제휴카드 안내':
     case '카드안내':
       return data.cardMessage || '';
+    case '카드조건': {
+      const msg = data.cardMessage || '';
+      const match = msg.match(/※\s*(.+?)\s제휴카드.+?월\s(\d+만원)\s이상\s사용/);
+      if (match) {
+        return `${match[1]} 제휴카드 / 월 ${match[2]} 이상 사용 조건`;
+      }
+      return msg;
+    }
     case '혜택 01':
       return data.benefits?.[0] || '';
     case '혜택 02':
