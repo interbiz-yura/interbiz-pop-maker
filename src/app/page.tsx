@@ -153,19 +153,13 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
   const rows: PriceRow[] = [];
   groups.forEach((group) => {
     const first = group[0];
-    const find = (period: number, combo: string) =>
-      group.find((e: RawEntry) => e.period === period && e.comboType === combo);
+    const findNone = (period: number) =>
+      group.find((e: RawEntry) => e.period === period && e.comboType === '결합없음');
 
-    const y3none = find(36, '결합없음');
-    const y4none = find(48, '결합없음');
-    const y4new  = find(48, '신규결합');
-    const y4ext  = find(48, '기존결합');
-    const y5none = find(60, '결합없음');
-    const y5new  = find(60, '신규결합');
-    const y5ext  = find(60, '기존결합');
-    const y6none = find(72, '결합없음');
-    const y6new  = find(72, '신규결합');
-    const y6ext  = find(72, '기존결합');
+    const y3none = findNone(36);
+    const y4none = findNone(48);
+    const y5none = findNone(60);
+    const y6none = findNone(72);
 
     rows.push({
       channel: '',
@@ -179,22 +173,22 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       activation: y6none?.activation || y5none?.activation || y4none?.activation || y3none?.activation || 0,
       y3base: y3none?.finalPrice || 0,
       y4base: y4none?.finalPrice || 0,
-      y4new:  y4new?.finalPrice || 0,
-      y4exist: y4ext?.finalPrice || 0,
+      y4new: 0,
+      y4exist: 0,
       y5base: y5none?.finalPrice || 0,
-      y5new:  y5new?.finalPrice || 0,
-      y5exist: y5ext?.finalPrice || 0,
+      y5new: 0,
+      y5exist: 0,
       y6base: y6none?.finalPrice || 0,
-      y6new:  y6new?.finalPrice || 0,
-      y6exist: y6ext?.finalPrice || 0,
+      y6new: 0,
+      y6exist: 0,
       prepay30amount: y6none?.prepay30amount || 0,
       prepay30base:   y6none?.prepay30final || 0,
-      prepay30new:    y6new?.prepay30final || 0,
-      prepay30exist:  y6ext?.prepay30final || 0,
+      prepay30new: 0,
+      prepay30exist: 0,
       prepay50amount: y6none?.prepay50amount || 0,
       prepay50base:   y6none?.prepay50final || 0,
-      prepay50new:    y6new?.prepay50final || 0,
-      prepay50exist:  y6ext?.prepay50final || 0,
+      prepay50new: 0,
+      prepay50exist: 0,
     });
   });
   return rows;
