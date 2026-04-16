@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(node -e \"const d=require\\('./public/data/care-benefits.json'\\); d.filter\\(x=>x.category==='스타일러'||x.productGroup==='스타일러'||\\(x.name&&x.name.includes\\('스타일러'\\)\\)\\).forEach\\(x=>console.log\\(JSON.stringify\\(x,null,2\\)\\)\\)\")",
+      "Bash(node -e \"const d=require\\('./public/data/care-benefits.json'\\); const s=JSON.stringify\\(d\\); const idx=s.indexOf\\('스타일러'\\); if\\(idx>=0\\) console.log\\(s.substring\\(Math.max\\(0,idx-200\\),idx+500\\)\\); else console.log\\('not found'\\);\")",
+      "Bash(node -e \"const d=require\\('./public/data/care-benefits.json'\\); d.filter\\(x=>x.product==='스타일러'\\).forEach\\(x=>console.log\\(JSON.stringify\\(x,null,2\\)\\)\\)\")",
+      "Bash(node -e ' *)",
+      "Bash(node -e \"const d=require\\('./public/data/care-benefits.json'\\); d.filter\\(x=>x.product==='스타일러'\\).forEach\\(x=>console.log\\(x.careKey, '→', x.paymentValue, '|', x.benefits_large2[0]\\)\\)\")"
+    ]
+  }
+}
