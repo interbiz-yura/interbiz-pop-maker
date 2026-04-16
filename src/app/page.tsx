@@ -161,6 +161,13 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
     const y5none = findNone(60);
     const y6none = findNone(72);
 
+    if (first.model === '27LX5QKNA.AKR') {
+      console.log('[DEBUG 27LX5QKNA]', {
+        group: group.map(e => ({ period: e.period, combo: e.comboType, prepay30amount: e.prepay30amount, prepay30final: e.prepay30final })),
+        y6none: y6none,
+      });
+    }
+
     rows.push({
       channel: '',
       category: first.category,
