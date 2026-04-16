@@ -1419,8 +1419,10 @@ return (
               )}
             </button>
           </div>
-          <div className="text-center mt-3 text-[10px] text-slate-400">
-            Developed by 인터비즈 오유라
+          <div className="text-center mt-3 text-[10px] text-slate-400 leading-relaxed">
+            담당자 : 인터비즈시스템 LG혼매사업팀 Staff 오유라
+            <br />
+            문의 : yura.oh@interbiz.co.kr
           </div>
         </div>
 
