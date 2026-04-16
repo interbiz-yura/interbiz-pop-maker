@@ -16,6 +16,7 @@ const FONT_MAP: Record<string, { file: string; family: string }> = {
   'G마켓 산스 Light': { file: '/fonts/GmarketSansLight.otf', family: 'GmarketSansLight' },
   '맑은 고딕': { file: '', family: 'Malgun Gothic, sans-serif' },
   '맑은 고딕 Semilight': { file: '', family: 'Malgun Gothic Semilight, Malgun Gothic, sans-serif' },
+  'HY견고딕': { file: '', family: 'HY견고딕, HYGothic-Extra, 맑은 고딕, Malgun Gothic, sans-serif' },
 };
 
 // 폰트 로딩 캐시
