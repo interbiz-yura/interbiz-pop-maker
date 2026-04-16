@@ -736,6 +736,9 @@ export default function PopMakerPage() {
   const getCalculatedPrice = useCallback((group: ModelGroup) => {
     const sel = modelSelections[group.model];
     const row = getSelectedRow(group);
+    if (group.model === '27LX5QKNA.AKR') {
+      console.log('[DEBUG selectedRow 27LX5QKNA]', { y6base: row.y6base, prepay30base: row.prepay30base, prepay50base: row.prepay50base, prepay30amount: row.prepay30amount, prepay50amount: row.prepay50amount, careKey: row.careKey });
+    }
     const defaultPeriod = row.y6base ? '6년' : row.y5base ? '5년' : row.y4base ? '4년' : row.y3base ? '3년' : '6년';
     const period = sel?.period || defaultPeriod;
 
