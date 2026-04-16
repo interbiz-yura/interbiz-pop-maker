@@ -29,6 +29,7 @@ async function loadFont(fontFamily: string): Promise<void> {
   const mapping = FONT_MAP[fontFamily];
   if (!mapping) return;
   if (loadedFonts.has(mapping.family)) return;
+  if (!mapping.file) { loadedFonts.add(mapping.family); return; }
 
   try {
     const font = new FontFace(mapping.family, `url(${mapping.file})`);
