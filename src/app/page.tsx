@@ -565,6 +565,16 @@ export default function PopMakerPage() {
     [prepay50ModelGroups]
   );
 
+  // ----- 선택 제품 필터 -----
+  const selectedModelGroups = useMemo(() => {
+    const result: Record<string, ModelGroup[]> = {};
+    for (const [cat, groups] of Object.entries(categoryModelGroups)) {
+      const filtered = groups.filter(g => checkedModels.has(g.model));
+      if (filtered.length > 0) result[cat] = filtered;
+    }
+    return result;
+  }, [categoryModelGroups, checkedModels]);
+
   // ----- 변동 제품 카운트 -----
   const changeCount = useMemo(() => compareResult?.summary.totalChanges || 0, [compareResult]);
 
@@ -621,6 +631,7 @@ export default function PopMakerPage() {
   const filteredData = useMemo(() => {
       let data: Record<string, ModelGroup[]> = {};
       if (activeCategory === '전체') data = categoryModelGroups;
+      else if (activeCategory === '선택 제품') data = selectedModelGroups;
       else if (activeCategory === '활성화 제품') data = activationModelGroups;
       else if (activeCategory === '변동 제품') return {};
       else if (activeCategory === '30%선납') data = prepay30ModelGroups;
@@ -641,7 +652,7 @@ export default function PopMakerPage() {
       }
 
       return data;
-    }, [activeCategory, categoryModelGroups, activationModelGroups, searchQuery]);
+    }, [activeCategory, categoryModelGroups, activationModelGroups, selectedModelGroups, prepay30ModelGroups, prepay50ModelGroups, searchQuery]);
 
   const visibleCategories = useMemo(() => Object.keys(filteredData), [filteredData]);
   const totalModels = useMemo(() => Object.values(categoryModelGroups).flat().length, [categoryModelGroups]);
@@ -1719,7 +1730,9 @@ return (
                     <span className="text-xs font-bold text-slate-600">전체 선택 ({filteredCount})</span>
                   </label>
                 )}
-                <div className="text-xs text-slate-500 font-medium">선택됨: <span className="text-rose-600 font-bold">{checkedModels.size}</span>개</div>
+                <FilterButton active={activeCategory === "선택 제품" && checkedModels.size > 0} onClick={() => setActiveCategory("선택 제품")} activeColor="text-slate-600 bg-slate-50 border-slate-200 shadow-sm">
+                  선택 제품 ({checkedModels.size})
+                </FilterButton>
               </div>
               <input type="text" value={searchQuery} onChange={(e) => setSearchQuery(e.target.value)} placeholder="모델명 검색..." className="w-56 px-4 py-2 text-xs rounded-full border border-gray-300 bg-gray-50 outline-none focus:border-rose-400 focus:bg-white transition-colors" />
             </div>

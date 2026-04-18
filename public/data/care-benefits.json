@@ -2176,5 +2176,23 @@
     ],
     "paymentValue": 0,
     "modelCondition": ""
+  },
+  {
+    "product": "냉장고 (일반)",
+    "careKey": "무관리",
+    "benefits": [
+      "•     계약기간 내 무상A/S",
+      "",
+      "",
+      ""
+    ],
+    "benefits_large2": [
+      "•     계약기간 내 무상A/S",
+      "",
+      "",
+      ""
+    ],
+    "paymentValue": 0,
+    "modelCondition": ""
   }
 ]
