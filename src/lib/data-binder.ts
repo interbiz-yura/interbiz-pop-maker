@@ -27,9 +27,9 @@ export function bindValue(name: string, data: CalculatedData): string {
     case '할인':
     case '할인가':
     case '월구독료':
-      return data.discountPrice > 0 ? formatNumber(data.discountPrice) : '';
+      return data.discountPrice > 0 ? formatNumber(data.discountPrice) : '0';
     case '일구독':
-      return data.dailyPrice > 0 ? `일 ${formatNumber(data.dailyPrice)}원` : '';
+      return data.dailyPrice > 0 ? `일 ${formatNumber(data.dailyPrice)}원` : '일 0원';
 
     // ----- 가격 (선납 가격표용 — "월 OOO원" 형식) -----
     case '기본':

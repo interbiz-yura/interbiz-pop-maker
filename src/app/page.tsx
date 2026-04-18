@@ -898,7 +898,7 @@ export default function PopMakerPage() {
 
           // 케어서비스 혜택 찾기
           const careKey = row.careKey || '';
-          const careBenefit = careBenefits.find(cb => cb.careKey === careKey);
+          const careBenefit = careBenefits.find(cb => cb.product === row.category && cb.careKey === careKey);
           const benefits = careBenefit?.benefits || ['', '', '', ''];
 
           // QR코드
