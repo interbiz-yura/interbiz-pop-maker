@@ -44,14 +44,14 @@
   {
     "cardName": "[롯데]구독엔로카",
     "monthUsage": "40만",
-    "discountAmount": 19000,
+    "discountAmount": 20000,
     "message": "※ 롯데 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
     "order": 1
   },
   {
     "cardName": "[롯데]구독엔로카",
     "monthUsage": "80만",
-    "discountAmount": 22000,
+    "discountAmount": 23000,
     "message": "※ 롯데 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
     "order": 2
   },
@@ -75,6 +75,27 @@
     "discountAmount": 22000,
     "message": "※ KB국민 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
     "order": 2
+  },
+  {
+    "cardName": "[현대]LG전자",
+    "monthUsage": "40만",
+    "discountAmount": 15000,
+    "message": "※ 현대 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
+    "order": 1
+  },
+  {
+    "cardName": "[현대]LG전자",
+    "monthUsage": "80만",
+    "discountAmount": 17000,
+    "message": "※ 현대 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
+    "order": 2
+  },
+  {
+    "cardName": "[현대]LG전자",
+    "monthUsage": "120만",
+    "discountAmount": 19000,
+    "message": "※ 현대 제휴카드 프로모션 적용, 월 120만원 이상 사용 시",
+    "order": 3
   },
   {
     "cardName": "[하나]LG전자플러스",
