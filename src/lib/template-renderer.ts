@@ -223,15 +223,18 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
       ctx.textAlign = 'left';
       ctx.textBaseline = 'bottom';
 
+      // baseline=bottom이면 y는 텍스트 하단이므로, body 폰트 높이만큼 아래로 보정
+      const adjustedY = y + fontSizePx;
+
       // prefix 그리기
       ctx.font = `${boldPrefix}${prefixSizePx}px ${fontFamily}`;
       ctx.fillStyle = prefixColor;
-      drawTextWithSpacing(ctx, prefixText, prefixX, y, prefixSpacing, 'left');
+      drawTextWithSpacing(ctx, prefixText, prefixX, adjustedY, prefixSpacing, 'left');
 
       // body 그리기
       ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
       ctx.fillStyle = textDef.color;
-      drawTextWithSpacing(ctx, bodyText, bodyX, y, spacing, 'left');
+      drawTextWithSpacing(ctx, bodyText, bodyX, adjustedY, spacing, 'left');
 
       // 복원
       ctx.textAlign = prevAlign;
