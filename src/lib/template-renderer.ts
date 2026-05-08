@@ -217,9 +217,11 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
         bodyX = x + prefixWidth;
       }
 
-      // textAlign 임시로 'left'로 변경 (drawTextWithSpacing 내부 fillText가 textAlign 영향 받음)
+      // textAlign/textBaseline 임시 변경 (baseline=bottom으로 prefix와 body 하단 정렬)
       const prevAlign = ctx.textAlign;
+      const prevBaseline = ctx.textBaseline;
       ctx.textAlign = 'left';
+      ctx.textBaseline = 'bottom';
 
       // prefix 그리기
       ctx.font = `${boldPrefix}${prefixSizePx}px ${fontFamily}`;
@@ -231,8 +233,9 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
       ctx.fillStyle = textDef.color;
       drawTextWithSpacing(ctx, bodyText, bodyX, y, spacing, 'left');
 
-      // textAlign 복원
+      // 복원
       ctx.textAlign = prevAlign;
+      ctx.textBaseline = prevBaseline;
     }
     // '*' 기호가 있고 left 정렬이면 본문/노트 분리 렌더 (노트는 70% 크기)
     else if (textDef.align === 'left' && value.includes('*')) {
