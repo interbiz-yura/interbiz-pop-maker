@@ -99,6 +99,8 @@ export function bindValue(name: string, data: CalculatedData): string {
       return data.totalSubscription > 0 ? formatNumber(data.totalSubscription) : '';
     case '케어정보':
       return data.careInfo || '';
+    case '계약기간':
+      return data.contractMonths > 0 ? String(data.contractMonths) : '';
     case '케어라벨01':
       return data.careLabel01 || '';
     case '케어라벨02':
