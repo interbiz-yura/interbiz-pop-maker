@@ -115,7 +115,7 @@ export function bindValue(name: string, data: CalculatedData): string {
       return data.careContent03 || '';
     case '모델명케어': {
       const ci = data.careInfo || '';
-      return ci && ci !== '무관리' ? `${data.model || ''} / ${ci}` : data.model || '';
+      return ci ? `${data.model || ''} / ${ci}` : data.model || '';
     }
 
     default:

@@ -918,6 +918,8 @@ export default function PopMakerPage() {
           const careKey = row.careKey || '';
           const careBenefit = careBenefits.find(cb => cb.product === row.category && cb.careKey === careKey);
           const benefits = careBenefit?.benefits || ['', '', '', ''];
+          // 케어라벨/내용은 제품군만으로 매칭 (같은 제품군이면 케어 내용 동일)
+          const careBenefitByProduct = careBenefits.find(cb => cb.product === row.category && cb.care_label_01);
 
           // QR코드
           const qrCode = qrMapping[modelName] || '';
@@ -965,12 +967,12 @@ export default function PopMakerPage() {
             totalSubscription,
             careInfo,
             contractMonths,
-            careLabel01: careBenefit?.care_label_01 || '',
-            careContent01: (careBenefit?.care_content_01 || '') + (careBenefit?.care_note_01 ? '  ' + careBenefit.care_note_01 : ''),
-            careLabel02: careBenefit?.care_label_02 || '',
-            careContent02: (careBenefit?.care_content_02 || '') + (careBenefit?.care_note_02 ? '  ' + careBenefit.care_note_02 : ''),
-            careLabel03: careBenefit?.care_label_03 || '',
-            careContent03: (careBenefit?.care_content_03 || '') + (careBenefit?.care_note_03 ? '  ' + careBenefit.care_note_03 : ''),
+            careLabel01: careBenefitByProduct?.care_label_01 || '',
+            careContent01: (careBenefitByProduct?.care_content_01 || '') + (careBenefitByProduct?.care_note_01 ? '  ' + careBenefitByProduct.care_note_01 : ''),
+            careLabel02: careBenefitByProduct?.care_label_02 || '',
+            careContent02: (careBenefitByProduct?.care_content_02 || '') + (careBenefitByProduct?.care_note_02 ? '  ' + careBenefitByProduct.care_note_02 : ''),
+            careLabel03: careBenefitByProduct?.care_label_03 || '',
+            careContent03: (careBenefitByProduct?.care_content_03 || '') + (careBenefitByProduct?.care_note_03 ? '  ' + careBenefitByProduct.care_note_03 : ''),
           };
 
         const values = bindAllValues(textNames, calcData);
