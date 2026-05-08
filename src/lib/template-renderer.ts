@@ -224,7 +224,7 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
       ctx.textBaseline = 'bottom';
 
       // baseline=bottom이면 y는 텍스트 하단이므로, body 폰트 높이만큼 아래로 보정
-      const adjustedY = y + fontSizePx * 0.5;
+      const adjustedY = y + fontSizePx * 0.4;
 
       // prefix 그리기
       ctx.font = `${boldPrefix}${prefixSizePx}px ${fontFamily}`;
