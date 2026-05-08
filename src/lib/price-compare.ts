@@ -122,6 +122,10 @@ export async function parseNewExcelForCompare(url: string, sheetName: string): P
   const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
   const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
 
+  // 헤더(0행) I열로 신규/기존 구조 판별
+  const headerI = str(0, 8).replace(/\s/g, '');
+  const offset = headerI === '가전단품' ? 1 : 0;
+
   interface Entry { model: string; category: string; careType: string; careGrade: string; visitCycle: string; period: number; comboType: string; finalPrice: number; }
   const entries: Entry[] = [];
   for (let r = 1; r <= range.e.r; r++) {
@@ -129,7 +133,7 @@ export async function parseNewExcelForCompare(url: string, sheetName: string): P
     if (!model) continue;
     entries.push({
       model, category: str(r, 0), careType: str(r, 2), careGrade: str(r, 3), visitCycle: str(r, 4),
-      period: num(r, 5), comboType: str(r, 6), finalPrice: num(r, 11),
+      period: num(r, 5), comboType: str(r, 6), finalPrice: num(r, 11 + offset),
     });
   }
 

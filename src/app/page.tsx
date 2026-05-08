@@ -109,6 +109,10 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
   const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
   const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
 
+  // 헤더(0행) I열로 신규/기존 구조 판별: "가전단품" 칼럼이 추가된 신규 구조면 offset=1
+  const headerI = str(0, 8).replace(/\s/g, '');
+  const offset = headerI === '가전단품' ? 1 : 0;
+
   // 1행부터 데이터 (0행은 헤더)
   interface RawEntry {
     row: number;
@@ -132,13 +136,13 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       visitCycle: str(r, 4),  // E열
       period: num(r, 5),      // F열 (36/48/60/72)
       comboType: str(r, 6),   // G열 (결합없음/신규결합/기존결합)
-      listPrice: num(r, 7),   // H열
-      finalPrice: num(r, 11), // L열 (최종요금)
-      activation: num(r, 10), // K열
-      prepay30amount: num(r, 12), // M열
-      prepay30final: num(r, 13),  // N열
-      prepay50amount: num(r, 14), // O열
-      prepay50final: num(r, 15),  // P열
+      listPrice: num(r, 7),   // H열 (offset 영향 없음)
+      activation: num(r, 10 + offset),
+      finalPrice: num(r, 11 + offset),
+      prepay30amount: num(r, 12 + offset),
+      prepay30final: num(r, 13 + offset),
+      prepay50amount: num(r, 14 + offset),
+      prepay50final: num(r, 15 + offset),
     });
   }
 
