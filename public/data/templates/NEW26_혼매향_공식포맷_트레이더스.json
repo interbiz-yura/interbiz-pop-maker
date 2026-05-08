@@ -3,14 +3,14 @@
   "background_color": "#FFFFFF",
   "border_color": "#CCCCCC",
   "border_width": 3,
-  "background_image": "images/1개 모드로 수정_260507 (1)_5.jpg",
+  "background_image": "images/1개 모드로 수정_260507 (1)_5_1.jpg",
   "texts": {
     "할인": {
       "position_ratio": [
         0.931,
-        0.8057
+        0.8218
       ],
-      "font_size_pt": 100.0,
+      "font_size_pt": 112.0,
       "color": "#E71218",
       "align": "right",
       "font_family": "Pretendard ExtraBold",
@@ -18,7 +18,7 @@
     },
     "일구독": {
       "position_ratio": [
-        0.2689,
+        0.2723,
         0.8442
       ],
       "font_size_pt": 30.0,
@@ -41,7 +41,7 @@
     "기본구독료": {
       "position_ratio": [
         0.8756,
-        0.6183
+        0.6264
       ],
       "font_size_pt": 75.0,
       "color": "#0D0D0D",
@@ -73,7 +73,7 @@
     },
     "케어내용01": {
       "position_ratio": [
-        0.0851,
+        0.0843,
         0.2903
       ],
       "font_size_pt": 16.0,
@@ -84,7 +84,7 @@
     },
     "케어내용02": {
       "position_ratio": [
-        0.0851,
+        0.0843,
         0.3388
       ],
       "font_size_pt": 16.0,
@@ -95,7 +95,7 @@
     },
     "케어내용03": {
       "position_ratio": [
-        0.0851,
+        0.0843,
         0.3857
       ],
       "font_size_pt": 16.0,
@@ -106,13 +106,24 @@
     },
     "계약기간": {
       "position_ratio": [
-        0.6048,
-        0.5176
+        0.6059,
+        0.5208
       ],
       "font_size_pt": 20.0,
       "color": "#000000",
       "align": "right",
       "font_family": "Pretendard ExtraBold",
+      "letter_spacing": "보통"
+    },
+    "모델명케어": {
+      "position_ratio": [
+        0.0843,
+        0.2226
+      ],
+      "font_size_pt": 24.0,
+      "color": "#000000",
+      "align": "left",
+      "font_family": "Pretendard SemiBold",
       "letter_spacing": "보통"
     }
   },
