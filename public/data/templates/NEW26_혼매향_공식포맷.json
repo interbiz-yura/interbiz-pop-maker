@@ -161,14 +161,14 @@
     },
     "월할인": {
       "position_ratio": [
-        0.4836,
-        0.5423
+        0.649,
+        0.5484
       ],
       "font_size_pt": 112,
-      "color": "#EB1B22",
+      "color": "#E71218",
       "align": "right",
       "font_family": "Pretendard ExtraBold",
-      "letter_spacing": "0",
+      "letter_spacing": "보통",
       "prefix": "월 ",
       "prefix_size_pt": 36,
       "prefix_color": "#7F7F7F"

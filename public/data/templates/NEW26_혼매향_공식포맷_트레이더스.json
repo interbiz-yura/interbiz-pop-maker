@@ -18,7 +18,7 @@
     },
     "카드조건": {
       "position_ratio": [
-        0.931,
+        0.9328999999999998,
         0.9443
       ],
       "font_size_pt": 22,
@@ -117,14 +117,14 @@
     },
     "월할인": {
       "position_ratio": [
-        0.7646,
-        0.8226
+        0.9329,
+        0.8206
       ],
       "font_size_pt": 112,
-      "color": "#EB1B22",
+      "color": "#E71218",
       "align": "right",
       "font_family": "Pretendard ExtraBold",
-      "letter_spacing": "0",
+      "letter_spacing": "보통",
       "prefix": "월 ",
       "prefix_size_pt": 60,
       "prefix_color": "#EB1B22"
