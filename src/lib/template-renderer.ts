@@ -17,6 +17,15 @@ const FONT_MAP: Record<string, { file: string; family: string }> = {
   '맑은 고딕': { file: '', family: 'Malgun Gothic, sans-serif' },
   '맑은 고딕 Semilight': { file: '', family: 'Malgun Gothic Semilight, Malgun Gothic, sans-serif' },
   'HY견고딕': { file: '', family: 'HY견고딕, HYGothic-Extra, 맑은 고딕, Malgun Gothic, sans-serif' },
+  'Pretendard Thin': { file: '/fonts/Pretendard-Thin.otf', family: 'PretendardThin' },
+  'Pretendard ExtraLight': { file: '/fonts/Pretendard-ExtraLight.otf', family: 'PretendardExtraLight' },
+  'Pretendard Light': { file: '/fonts/Pretendard-Light.otf', family: 'PretendardLight' },
+  'Pretendard Regular': { file: '/fonts/Pretendard-Regular.otf', family: 'PretendardRegular' },
+  'Pretendard Medium': { file: '/fonts/Pretendard-Medium.otf', family: 'PretendardMedium' },
+  'Pretendard SemiBold': { file: '/fonts/Pretendard-SemiBold.otf', family: 'PretendardSemiBold' },
+  'Pretendard Bold': { file: '/fonts/Pretendard-Bold.otf', family: 'PretendardBold' },
+  'Pretendard ExtraBold': { file: '/fonts/Pretendard-ExtraBold.otf', family: 'PretendardExtraBold' },
+  'Pretendard Black': { file: '/fonts/Pretendard-Black.otf', family: 'PretendardBlack' },
 };
 
 // 폰트 로딩 캐시
@@ -179,7 +188,24 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
     ctx.textAlign = textDef.align;
     ctx.textBaseline = 'middle';
 
-    drawTextWithSpacing(ctx, value, x, y, spacing, textDef.align);
+    // '*' 기호가 있고 left 정렬이면 본문/노트 분리 렌더 (노트는 70% 크기)
+    if (textDef.align === 'left' && value.includes('*')) {
+      const idx = value.indexOf('*');
+      const main = value.substring(0, idx);
+      const note = value.substring(idx);
+
+      drawTextWithSpacing(ctx, main, x, y, spacing, 'left');
+
+      const mainWidth = ctx.measureText(main).width + spacing * Math.max(0, main.length - 1);
+
+      const noteFontSize = Math.round(fontSizePx * 0.7);
+      const noteSpacing = getLetterSpacingPx(textDef.letter_spacing, noteFontSize);
+      ctx.font = `${boldPrefix}${noteFontSize}px ${fontFamily}`;
+      drawTextWithSpacing(ctx, note, x + mainWidth + 4, y, noteSpacing, 'left');
+      ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
+    } else {
+      drawTextWithSpacing(ctx, value, x, y, spacing, textDef.align);
+    }
   }
 
   // 4) QR코드 렌더링

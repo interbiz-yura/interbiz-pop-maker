@@ -15,7 +15,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "무상재설치",
+    "care_content_02": "이사나 위치 이동 시 철거, 재설치 무료",
+    "care_note_02": "*운송 비용은 유료",
+    "care_label_03": "원스톱재설치",
+    "care_content_03": "사운드바까지 첫 설치 그대로",
+    "care_note_03": "*TV와 사운드바 세트 구독 시 제공"
   },
   {
     "product": "TV",
@@ -33,7 +42,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "무상재설치",
+    "care_content_02": "이사나 위치 이동 시 철거, 재설치 무료",
+    "care_note_02": "*운송 비용은 유료",
+    "care_label_03": "원스톱재설치",
+    "care_content_03": "사운드바까지 첫 설치 그대로",
+    "care_note_03": "*TV와 사운드바 세트 구독 시 제공"
   },
   {
     "product": "TV",
@@ -51,7 +69,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "무상재설치",
+    "care_content_02": "이사나 위치 이동 시 철거, 재설치 무료",
+    "care_note_02": "*운송 비용은 유료",
+    "care_label_03": "원스톱재설치",
+    "care_content_03": "사운드바까지 첫 설치 그대로",
+    "care_note_03": "*TV와 사운드바 세트 구독 시 제공"
   },
   {
     "product": "TV",
@@ -69,7 +96,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "무상재설치",
+    "care_content_02": "이사나 위치 이동 시 철거, 재설치 무료",
+    "care_note_02": "*운송 비용은 유료",
+    "care_label_03": "원스톱재설치",
+    "care_content_03": "사운드바까지 첫 설치 그대로",
+    "care_note_03": "*TV와 사운드바 세트 구독 시 제공"
   },
   {
     "product": "TV",
@@ -87,7 +123,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "무상재설치",
+    "care_content_02": "이사나 위치 이동 시 철거, 재설치 무료",
+    "care_note_02": "*운송 비용은 유료",
+    "care_label_03": "원스톱재설치",
+    "care_content_03": "사운드바까지 첫 설치 그대로",
+    "care_note_03": "*TV와 사운드바 세트 구독 시 제공"
   },
   {
     "product": "가습기",
@@ -105,7 +150,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 1134000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -123,7 +177,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 1294000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -141,7 +204,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 1626000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -159,7 +231,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 1626000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -177,7 +258,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 324000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -195,7 +285,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 484000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -213,7 +312,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 484000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -231,7 +339,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 594000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -249,7 +366,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 672000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -267,7 +393,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 672000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -285,7 +420,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 672000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -303,7 +447,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 754000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -321,7 +474,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 754000,
-    "modelCondition": "HY5"
+    "modelCondition": "HY5",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -339,7 +501,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 990000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -357,7 +528,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 990000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "가습기",
@@ -375,7 +555,16 @@
       "•     소모품제공(필터 교체)"
     ],
     "paymentValue": 990000,
-    "modelCondition": "HY7"
+    "modelCondition": "HY7",
+    "care_label_01": "전문케어",
+    "care_content_01": "물통, 미스트 케이스, 급수부, 극세 필터 등 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "정수필터, 공기청정 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -393,7 +582,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 1703000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -411,7 +609,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2183000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -429,7 +636,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2183000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -447,7 +663,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2247000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -465,7 +690,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2247000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -483,7 +717,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2393000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -501,7 +744,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2457000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "광파오븐",
@@ -519,7 +771,16 @@
       ""
     ],
     "paymentValue": 12000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "내부 세척, 회전판 및 스팀 세척, 성능 점검, 외관 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "소모품 정기 교체 서비스",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "광파오븐",
@@ -537,7 +798,16 @@
       ""
     ],
     "paymentValue": 24000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "내부 세척, 회전판 및 스팀 세척, 성능 점검, 외관 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "소모품 정기 교체 서비스",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (김치냉장고)",
@@ -555,7 +825,16 @@
       ""
     ],
     "paymentValue": 501000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "탈취 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (김치냉장고)",
@@ -573,7 +852,16 @@
       ""
     ],
     "paymentValue": 594000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "탈취 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (김치냉장고)",
@@ -591,7 +879,16 @@
       ""
     ],
     "paymentValue": 393000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "탈취 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (상냉장)",
@@ -609,7 +906,16 @@
       ""
     ],
     "paymentValue": 393000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (상냉장)",
@@ -627,7 +933,16 @@
       ""
     ],
     "paymentValue": 501000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (상냉장)",
@@ -645,7 +960,16 @@
       ""
     ],
     "paymentValue": 501000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (상냉장)",
@@ -663,7 +987,16 @@
       ""
     ],
     "paymentValue": 594000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (양문형)",
@@ -681,7 +1014,16 @@
       ""
     ],
     "paymentValue": 393000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (양문형)",
@@ -699,7 +1041,16 @@
       ""
     ],
     "paymentValue": 501000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (양문형)",
@@ -717,7 +1068,16 @@
       ""
     ],
     "paymentValue": 594000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (얼음정수기)",
@@ -735,7 +1095,16 @@
       ""
     ],
     "paymentValue": 1963800,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 얼음 저장통, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터, 퓨어프레시 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "냉장고 (얼음정수기)",
@@ -753,7 +1122,16 @@
       ""
     ],
     "paymentValue": 1963800,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 얼음 저장통, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터, 퓨어프레시 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "냉장고 (얼음정수기)",
@@ -771,7 +1149,16 @@
       ""
     ],
     "paymentValue": 2776800,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 얼음 저장통, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터, 퓨어프레시 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "냉장고 (일반)",
@@ -789,7 +1176,16 @@
       ""
     ],
     "paymentValue": 393000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "노트북",
@@ -807,7 +1203,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "소모품교체",
+    "care_content_01": "배터리 교체",
+    "care_note_01": "*라이트 플러스 이상 타입에 한함",
+    "care_label_02": "소모품교체2",
+    "care_content_02": "키보드 교체",
+    "care_note_02": "*프리미엄 타입에 한함",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "노트북",
@@ -825,7 +1230,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "소모품교체",
+    "care_content_01": "배터리 교체",
+    "care_note_01": "*라이트 플러스 이상 타입에 한함",
+    "care_label_02": "소모품교체2",
+    "care_content_02": "키보드 교체",
+    "care_note_02": "*프리미엄 타입에 한함",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "노트북",
@@ -843,7 +1257,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "소모품교체",
+    "care_content_01": "배터리 교체",
+    "care_note_01": "*라이트 플러스 이상 타입에 한함",
+    "care_label_02": "소모품교체2",
+    "care_content_02": "키보드 교체",
+    "care_note_02": "*프리미엄 타입에 한함",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "로봇청소기",
@@ -861,7 +1284,16 @@
       "•     부품 스팀 클리닝"
     ],
     "paymentValue": 1422600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "로봇, 오수관 클리닝, 배수통, 필터 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 추가 제공, 소모품 7종 교체",
+    "care_note_02": "*배터리 36개월차에 추가 제공",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "로봇청소기",
@@ -879,7 +1311,16 @@
       "•     부품 스팀 클리닝"
     ],
     "paymentValue": 457300,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "로봇, 오수관 클리닝, 배수통, 필터 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 추가 제공, 소모품 7종 교체",
+    "care_note_02": "*배터리 36개월차에 추가 제공",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (건조기)",
@@ -897,7 +1338,16 @@
       ""
     ],
     "paymentValue": 386500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 내부 스팀 케어, 배수 덕트 청소, 필터 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "마이크로 먼지 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (건조기)",
@@ -915,7 +1365,16 @@
       ""
     ],
     "paymentValue": 626500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 내부 스팀 케어, 배수 덕트 청소, 필터 세척",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "마이크로 먼지 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (드럼)",
@@ -933,7 +1392,16 @@
       ""
     ],
     "paymentValue": 269600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (드럼)",
@@ -951,7 +1419,16 @@
       ""
     ],
     "paymentValue": 270200,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (드럼)",
@@ -969,7 +1446,16 @@
       ""
     ],
     "paymentValue": 414200,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (드럼)",
@@ -987,7 +1473,16 @@
       ""
     ],
     "paymentValue": 413600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (드럼)",
@@ -1005,7 +1500,16 @@
       ""
     ],
     "paymentValue": 480900,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (미니워시)",
@@ -1023,7 +1527,16 @@
       ""
     ],
     "paymentValue": 125900,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 세척 및 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (미니워시)",
@@ -1041,7 +1554,16 @@
       ""
     ],
     "paymentValue": 125900,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 세척 및 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (워시콤보)",
@@ -1059,7 +1581,16 @@
       ""
     ],
     "paymentValue": 554100,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (워시콤보)",
@@ -1077,7 +1608,16 @@
       ""
     ],
     "paymentValue": 938100,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (워시타워)",
@@ -1095,7 +1635,16 @@
       ""
     ],
     "paymentValue": 1019700,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "세탁기 (워시타워)",
@@ -1113,7 +1662,16 @@
       ""
     ],
     "paymentValue": 1643700,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "드럼 케어, 직수 고압 세척 및 부품까지 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체, 2중 안심필터 추가 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "세탁기 (통돌이)",
@@ -1131,7 +1689,16 @@
       ""
     ],
     "paymentValue": 370500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "세탁조 케어, 고압 세척 및 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (통돌이)",
@@ -1149,7 +1716,16 @@
       ""
     ],
     "paymentValue": 368500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "세탁조 케어, 고압 세척 및 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "세탁기 (통돌이)",
@@ -1167,7 +1743,16 @@
       ""
     ],
     "paymentValue": 608500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "세탁조 케어, 고압 세척 및 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "배수필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "슈케어",
@@ -1185,7 +1770,16 @@
       ""
     ],
     "paymentValue": 141600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "내부 스팀 케어, 외관 클리닝, 성능 점검",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "전용 향기시트 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스타일러",
@@ -1203,7 +1797,16 @@
       ""
     ],
     "paymentValue": 260200,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "필터, 물받이, 기계실 입구, 제품 내외부 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "급/배수통 교체, 전용 향기시트 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스타일러",
@@ -1221,7 +1824,16 @@
       ""
     ],
     "paymentValue": 355000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "필터, 물받이, 기계실 입구, 제품 내외부 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "급/배수통 교체, 전용 향기시트 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스타일러",
@@ -1239,7 +1851,16 @@
       ""
     ],
     "paymentValue": 620000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "필터, 물받이, 기계실 입구, 제품 내외부 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "급/배수통 교체, 전용 향기시트 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스타일러",
@@ -1257,7 +1878,16 @@
       ""
     ],
     "paymentValue": 907500,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "필터, 물받이, 기계실 입구, 제품 내외부 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "급/배수통 교체, 전용 향기시트 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스탠바이미",
@@ -1275,7 +1905,16 @@
       ""
     ],
     "paymentValue": 219000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "",
+    "care_content_02": "",
+    "care_note_02": "",
+    "care_label_03": "",
+    "care_content_03": "",
+    "care_note_03": ""
   },
   {
     "product": "스탠바이미",
@@ -1293,7 +1932,16 @@
       ""
     ],
     "paymentValue": 219000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "",
+    "care_content_02": "",
+    "care_note_02": "",
+    "care_label_03": "",
+    "care_content_03": "",
+    "care_note_03": ""
   },
   {
     "product": "스탠바이미",
@@ -1311,7 +1959,16 @@
       ""
     ],
     "paymentValue": 219000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "",
+    "care_content_02": "",
+    "care_note_02": "",
+    "care_label_03": "",
+    "care_content_03": "",
+    "care_note_03": ""
   },
   {
     "product": "스탠바이미",
@@ -1329,7 +1986,16 @@
       ""
     ],
     "paymentValue": 219000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "",
+    "care_content_02": "",
+    "care_note_02": "",
+    "care_label_03": "",
+    "care_content_03": "",
+    "care_note_03": ""
   },
   {
     "product": "스탠바이미",
@@ -1347,7 +2013,16 @@
       ""
     ],
     "paymentValue": 219000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "무상A/S",
+    "care_content_01": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_01": "*고객 과실로 인한 제품 고장 제외",
+    "care_label_02": "",
+    "care_content_02": "",
+    "care_note_02": "",
+    "care_label_03": "",
+    "care_content_03": "",
+    "care_note_03": ""
   },
   {
     "product": "식기세척기",
@@ -1365,7 +2040,16 @@
       "•     수질 경도 측정 및 연수장치 점검"
     ],
     "paymentValue": 734800,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "세제함 및 내부 스팀 케어, 연수장치 점검, 관리",
+    "care_note_01": "",
+    "care_label_02": "필터 교체",
+    "care_content_02": "음식물 거름망, 에어필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "식기세척기",
@@ -1383,7 +2067,16 @@
       "•     수질 경도 측정 및 연수장치 점검"
     ],
     "paymentValue": 873800,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "세제함 및 내부 스팀 케어, 연수장치 점검, 관리",
+    "care_note_01": "",
+    "care_label_02": "필터 교체",
+    "care_content_02": "음식물 거름망, 에어필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어로부스터",
@@ -1401,7 +2094,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 766000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로부스터",
@@ -1419,7 +2121,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 824000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로부스터",
@@ -1437,7 +2148,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 940000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1455,7 +2175,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 383000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1473,7 +2202,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 383000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1491,7 +2229,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 442000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1509,7 +2256,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 442000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1527,7 +2283,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 500000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로시리즈",
@@ -1545,7 +2310,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 500000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로타워",
@@ -1563,7 +2337,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 383000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로타워",
@@ -1581,7 +2364,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 412000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어로타워",
@@ -1599,7 +2391,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 470000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "에어컨 (2in1)",
@@ -1617,7 +2418,16 @@
       ""
     ],
     "paymentValue": 1764000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (2in1)",
@@ -1635,7 +2445,16 @@
       ""
     ],
     "paymentValue": 1764000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (2in1)",
@@ -1653,7 +2472,16 @@
       ""
     ],
     "paymentValue": 2422000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (2in1)",
@@ -1671,7 +2499,16 @@
       ""
     ],
     "paymentValue": 2422000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (벽걸이)",
@@ -1689,7 +2526,16 @@
       ""
     ],
     "paymentValue": 458000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (벽걸이)",
@@ -1707,7 +2553,16 @@
       ""
     ],
     "paymentValue": 720000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (스탠드)",
@@ -1725,7 +2580,16 @@
       ""
     ],
     "paymentValue": 1663000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (스탠드)",
@@ -1743,7 +2607,16 @@
       ""
     ],
     "paymentValue": 1663000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (스탠드)",
@@ -1761,7 +2634,16 @@
       ""
     ],
     "paymentValue": 2059000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "에어컨 (스탠드)",
@@ -1779,7 +2661,16 @@
       ""
     ],
     "paymentValue": 2059000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "커버 분리 후 내부 고압 세척, 스팀, UV, 피톤치드 케어",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "공기청정필터 교체 및 극세필터 세척",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "전기레인지",
@@ -1797,7 +2688,16 @@
       ""
     ],
     "paymentValue": 366000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "상판, 아래 틈새까지 전용 장비로 세척 및 광택",
+    "care_note_01": "",
+    "care_label_02": "상판교체",
+    "care_content_02": "인덕션 상판 새 것으로 무상 교체",
+    "care_note_02": "*36개월에서 최대 48개월차까지",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "전기레인지",
@@ -1815,7 +2715,16 @@
       ""
     ],
     "paymentValue": 431400,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "상판, 아래 틈새까지 전용 장비로 세척 및 광택",
+    "care_note_01": "",
+    "care_label_02": "상판교체",
+    "care_content_02": "인덕션 상판 새 것으로 무상 교체",
+    "care_note_02": "*36개월에서 최대 48개월차까지",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "전기레인지",
@@ -1833,7 +2742,16 @@
       ""
     ],
     "paymentValue": 551796,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "상판, 아래 틈새까지 전용 장비로 세척 및 광택",
+    "care_note_01": "",
+    "care_label_02": "상판교체",
+    "care_content_02": "인덕션 상판 새 것으로 무상 교체",
+    "care_note_02": "*36개월에서 최대 48개월차까지",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "정수기",
@@ -1851,7 +2769,16 @@
       ""
     ],
     "paymentValue": 1152000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "정수기",
@@ -1869,7 +2796,16 @@
       ""
     ],
     "paymentValue": 1152000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "정수기",
@@ -1887,7 +2823,16 @@
       ""
     ],
     "paymentValue": 1152000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "정수기",
@@ -1905,7 +2850,16 @@
       ""
     ],
     "paymentValue": 1152000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "정수기",
@@ -1923,7 +2877,16 @@
       ""
     ],
     "paymentValue": 2209000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "제습기",
@@ -1941,7 +2904,16 @@
       "•     물통 스팀 케어"
     ],
     "paymentValue": 238000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체 (12개월 주기)",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "제습기",
@@ -1959,7 +2931,16 @@
       "•     물통 스팀 케어"
     ],
     "paymentValue": 238000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체 (12개월 주기)",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "제습기",
@@ -1977,7 +2958,16 @@
       "•     물통 스팀 케어"
     ],
     "paymentValue": 238000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체 (12개월 주기)",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "청소기",
@@ -1995,7 +2985,16 @@
       "•     제품성능 점검 (12개월 방문관리)"
     ],
     "paymentValue": 1033300,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "제품 회수 후 분해해 에어세척, 스팀 케어, 초음파 세척",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 및 추가 흡입구 증정, 각종 필터, 먼지 봉투 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "청소기",
@@ -2013,7 +3012,16 @@
       "•     제품성능 점검 (12개월 방문관리)"
     ],
     "paymentValue": 1553300,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "제품 회수 후 분해해 에어세척, 스팀 케어, 초음파 세척",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 및 추가 흡입구 증정, 각종 필터, 먼지 봉투 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "공기청정기",
@@ -2031,7 +3039,16 @@
       "•     제품성능 점검 (6개월 방문관리/프리미엄)"
     ],
     "paymentValue": 2183000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "클린부스터 클리닝, 필터 세척, 성능점검 등",
+    "care_note_01": "",
+    "care_label_02": "필터교체",
+    "care_content_02": "복합 필터, 극세 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "냉장고 (상냉장)",
@@ -2049,7 +3066,16 @@
       ""
     ],
     "paymentValue": 501000,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "기계실 내부 먼지 제거 및 청소, 제품 성능 점검, 외관 토탈 클리닝",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "제균 필터 무상 교체 및 관리 서비스 제공",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "로봇청소기",
@@ -2067,7 +3093,16 @@
       "•     부품 스팀 클리닝"
     ],
     "paymentValue": 1422600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "로봇, 오수관 클리닝, 배수통, 필터 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 추가 제공, 소모품 7종 교체",
+    "care_note_02": "*배터리 36개월차에 추가 제공",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "로봇청소기",
@@ -2085,7 +3120,16 @@
       "•     부품 스팀 클리닝"
     ],
     "paymentValue": 1422600,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "로봇, 오수관 클리닝, 배수통, 필터 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 추가 제공, 소모품 7종 교체",
+    "care_note_02": "*배터리 36개월차에 추가 제공",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "스타일러",
@@ -2103,7 +3147,16 @@
       ""
     ],
     "paymentValue": 260200,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "필터, 물받이, 기계실 입구, 제품 내외부 등 스팀 케어",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "급/배수통 교체, 전용 향기시트 제공",
+    "care_note_02": "",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "청소기",
@@ -2121,7 +3174,16 @@
       "•     제품성능 점검 (12개월 방문관리)"
     ],
     "paymentValue": 1033300,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "제품 회수 후 분해해 에어세척, 스팀 케어, 초음파 세척",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 및 추가 흡입구 증정, 각종 필터, 먼지 봉투 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "청소기",
@@ -2139,7 +3201,16 @@
       "•     제품성능 점검 (12개월 방문관리)"
     ],
     "paymentValue": 1553300,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "제품 회수 후 분해해 에어세척, 스팀 케어, 초음파 세척",
+    "care_note_01": "",
+    "care_label_02": "소모품교체",
+    "care_content_02": "배터리 및 추가 흡입구 증정, 각종 필터, 먼지 봉투 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외"
   },
   {
     "product": "얼음정수기",
@@ -2157,7 +3228,16 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 얼음 저장통, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터, 퓨어프레시 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   },
   {
     "product": "얼음정수기",
@@ -2175,24 +3255,15 @@
       ""
     ],
     "paymentValue": 0,
-    "modelCondition": ""
-  },
-  {
-    "product": "냉장고 (일반)",
-    "careKey": "무관리",
-    "benefits": [
-      "•     계약기간 내 무상A/S",
-      "",
-      "",
-      ""
-    ],
-    "benefits_large2": [
-      "•     계약기간 내 무상A/S",
-      "",
-      "",
-      ""
-    ],
-    "paymentValue": 0,
-    "modelCondition": ""
+    "modelCondition": "",
+    "care_label_01": "전문케어",
+    "care_content_01": "유로, 출수구 고온 고압 세척, 얼음 저장통, 기계실 세척",
+    "care_note_01": "*제품 및 모델별 상이",
+    "care_label_02": "필터교체",
+    "care_content_02": "워터필터, 퓨어프레시 필터 교체",
+    "care_note_02": "*제품 및 모델별 상이",
+    "care_label_03": "무상A/S,재설치",
+    "care_content_03": "구독 기간 내내 무상수리로 걱정 없이 사용, 무상 철거, 재설치",
+    "care_note_03": "*고객 과실로 인한 제품 고장 제외, 운송비는 유상"
   }
 ]

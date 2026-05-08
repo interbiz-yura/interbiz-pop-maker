@@ -92,6 +92,30 @@ export function bindValue(name: string, data: CalculatedData): string {
           return `${formatNumber(data.discountPrice * 72)}원`;
         }
 
+    // ----- 신규 양식 추가 필드 -----
+    case '가전단품':
+      return data.applianceSingle > 0 ? formatNumber(data.applianceSingle) : '';
+    case '총구독료':
+      return data.totalSubscription > 0 ? formatNumber(data.totalSubscription) : '';
+    case '케어정보':
+      return data.careInfo || '';
+    case '케어라벨01':
+      return data.careLabel01 || '';
+    case '케어라벨02':
+      return data.careLabel02 || '';
+    case '케어라벨03':
+      return data.careLabel03 || '';
+    case '케어내용01':
+      return data.careContent01 || '';
+    case '케어내용02':
+      return data.careContent02 || '';
+    case '케어내용03':
+      return data.careContent03 || '';
+    case '모델명케어': {
+      const ci = data.careInfo || '';
+      return ci && ci !== '무관리' ? `${data.model || ''} / ${ci}` : data.model || '';
+    }
+
     default:
       break;
   }

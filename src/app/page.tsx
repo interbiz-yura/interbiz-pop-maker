@@ -82,6 +82,7 @@ async function parseExcelFromURL(url: string, sheetName: string): Promise<PriceR
       y6base: num(18), y6new: num(19), y6exist: num(20),
       prepay30amount: num(21), prepay30base: num(22), prepay30new: num(23), prepay30exist: num(24),
       prepay50amount: num(25), prepay50base: num(26), prepay50new: num(27), prepay50exist: num(28),
+      applianceSingle: 0,
     });
   }
   return rows;
@@ -118,7 +119,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
     row: number;
     category: string; model: string; careType: string; careGrade: string; visitCycle: string;
     period: number; comboType: string;
-    listPrice: number; finalPrice: number; activation: number;
+    listPrice: number; applianceSingle: number; finalPrice: number; activation: number;
     prepay30amount: number; prepay30final: number;
     prepay50amount: number; prepay50final: number;
   }
@@ -137,6 +138,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       period: num(r, 5),      // F열 (36/48/60/72)
       comboType: str(r, 6),   // G열 (결합없음/신규결합/기존결합)
       listPrice: num(r, 7),   // H열 (offset 영향 없음)
+      applianceSingle: offset === 1 ? num(r, 8) : 0, // I열 (가전단품, 신규 구조에만 존재)
       activation: num(r, 10 + offset),
       finalPrice: num(r, 11 + offset),
       prepay30amount: num(r, 12 + offset),
@@ -200,6 +202,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       prepay50base:   y6none?.prepay50final || 0,
       prepay50new: 0,
       prepay50exist: 0,
+      applianceSingle: y6none?.applianceSingle || y5none?.applianceSingle || y4none?.applianceSingle || y3none?.applianceSingle || 0,
     });
   });
   return rows;
@@ -919,6 +922,23 @@ export default function PopMakerPage() {
           // QR코드
           const qrCode = qrMapping[modelName] || '';
 
+          // 신규 양식 추가 필드 계산
+          let contractMonths = 72;
+          if (sel?.period) {
+            contractMonths = sel.period === '6년' ? 72 : sel.period === '5년' ? 60 : sel.period === '4년' ? 48 : 36;
+          } else {
+            contractMonths = row.y6base > 0 ? 72 : row.y5base > 0 ? 60 : row.y4base > 0 ? 48 : 36;
+          }
+          const totalSubscription = basePrice * contractMonths;
+
+          const careType = row.careType || '';
+          const careGrade = row.careGrade || '';
+          const visitCycle = row.visitCycle || '';
+          let careInfo = '무관리';
+          if (careType && careType !== '무관리') {
+            careInfo = `${careType} / ${careGrade} / ${visitCycle}`;
+          }
+
           // CalculatedData 생성
           const calcData = {
             model: showSuffix ? modelName : (modelName.includes('.') ? modelName.split('.')[0] : modelName),
@@ -941,6 +961,16 @@ export default function PopMakerPage() {
             cardMessage2,
             prepay30monthly2: row.prepay30base ? Math.max(0, row.prepay30base - discountAmount2) : 0,
             prepay50monthly2: row.prepay50base ? Math.max(0, row.prepay50base - discountAmount2) : 0,
+            applianceSingle: row.applianceSingle || 0,
+            totalSubscription,
+            careInfo,
+            contractMonths,
+            careLabel01: careBenefit?.care_label_01 || '',
+            careContent01: (careBenefit?.care_content_01 || '') + (careBenefit?.care_note_01 ? '  ' + careBenefit.care_note_01 : ''),
+            careLabel02: careBenefit?.care_label_02 || '',
+            careContent02: (careBenefit?.care_content_02 || '') + (careBenefit?.care_note_02 ? '  ' + careBenefit.care_note_02 : ''),
+            careLabel03: careBenefit?.care_label_03 || '',
+            careContent03: (careBenefit?.care_content_03 || '') + (careBenefit?.care_note_03 ? '  ' + careBenefit.care_note_03 : ''),
           };
 
         const values = bindAllValues(textNames, calcData);

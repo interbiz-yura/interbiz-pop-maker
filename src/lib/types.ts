@@ -29,6 +29,7 @@ export interface PriceRow {
   prepay50base: number;   // AA열 - 50% 선납 월구독
   prepay50new: number;    // AB열 - 50% 신규결합
   prepay50exist: number;  // AC열 - 50% 기존결합
+  applianceSingle: number; // 가전단품 가격 (신규 양식 I열)
 }
 
 // ==========================================
@@ -57,6 +58,15 @@ export interface CareBenefit {
   benefits_large2: string[]; // 대형2 혜택 01~04
   paymentValue: number;      // 지불가치 금액
   modelCondition: string;    // 모델 조건 (앞 3글자)
+  care_label_01?: string;
+  care_content_01?: string;
+  care_note_01?: string;
+  care_label_02?: string;
+  care_content_02?: string;
+  care_note_02?: string;
+  care_label_03?: string;
+  care_content_03?: string;
+  care_note_03?: string;
 }
 
 // ==========================================
@@ -127,6 +137,17 @@ export interface CalculatedData {
   cardMessage2: string;
   prepay30monthly2: number;
   prepay50monthly2: number;
+  // 신규 양식 추가 필드
+  applianceSingle: number;    // 가전단품 가격
+  totalSubscription: number;  // 총구독료 (basePrice × 계약개월)
+  careInfo: string;           // 케어정보 (케어십형태 / 케어십구분 / 방문주기)
+  contractMonths: number;     // 계약기간 (개월수)
+  careLabel01: string;
+  careContent01: string;
+  careLabel02: string;
+  careContent02: string;
+  careLabel03: string;
+  careContent03: string;
 }
 
 // ==========================================

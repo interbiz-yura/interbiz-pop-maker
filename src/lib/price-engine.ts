@@ -224,6 +224,16 @@ export function calculatePatternB(
     cardMessage2: '',
     prepay30monthly2: 0,
     prepay50monthly2: 0,
+    applianceSingle: 0,
+    totalSubscription: 0,
+    careInfo: '',
+    contractMonths: 0,
+    careLabel01: '',
+    careContent01: '',
+    careLabel02: '',
+    careContent02: '',
+    careLabel03: '',
+    careContent03: '',
   };
 }
 
@@ -268,6 +278,16 @@ export function calculatePatternA(
     cardMessage2: '',
     prepay30monthly2: 0,
     prepay50monthly2: 0,
+    applianceSingle: 0,
+    totalSubscription: 0,
+    careInfo: '',
+    contractMonths: 0,
+    careLabel01: '',
+    careContent01: '',
+    careLabel02: '',
+    careContent02: '',
+    careLabel03: '',
+    careContent03: '',
   };
 }
 
