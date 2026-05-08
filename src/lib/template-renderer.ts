@@ -207,18 +207,32 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
       ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
       const bodyWidth = ctx.measureText(bodyText).width + spacing * Math.max(0, bodyText.length - 1);
 
-      // 시작 X 좌표 결정
-      const startX = textDef.align === 'right' ? x - (prefixWidth + bodyWidth) : x;
+      // 시작 X 좌표 결정 (right이면 anchor에서 body 폭만큼 왼쪽이 body 시작점, 다시 prefix 폭만큼 더 왼쪽이 prefix 시작점)
+      let prefixX: number, bodyX: number;
+      if (textDef.align === 'right') {
+        bodyX = x - bodyWidth;
+        prefixX = bodyX - prefixWidth;
+      } else {
+        prefixX = x;
+        bodyX = x + prefixWidth;
+      }
+
+      // textAlign 임시로 'left'로 변경 (drawTextWithSpacing 내부 fillText가 textAlign 영향 받음)
+      const prevAlign = ctx.textAlign;
+      ctx.textAlign = 'left';
 
       // prefix 그리기
       ctx.font = `${boldPrefix}${prefixSizePx}px ${fontFamily}`;
       ctx.fillStyle = prefixColor;
-      drawTextWithSpacing(ctx, prefixText, startX, y, prefixSpacing, 'left');
+      drawTextWithSpacing(ctx, prefixText, prefixX, y, prefixSpacing, 'left');
 
       // body 그리기
       ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
       ctx.fillStyle = textDef.color;
-      drawTextWithSpacing(ctx, bodyText, startX + prefixWidth, y, spacing, 'left');
+      drawTextWithSpacing(ctx, bodyText, bodyX, y, spacing, 'left');
+
+      // textAlign 복원
+      ctx.textAlign = prevAlign;
     }
     // '*' 기호가 있고 left 정렬이면 본문/노트 분리 렌더 (노트는 70% 크기)
     else if (textDef.align === 'left' && value.includes('*')) {
