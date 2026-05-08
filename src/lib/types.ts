@@ -77,6 +77,9 @@ export interface TemplateText {
   font_size_pt: number;
   color: string;
   align: 'left' | 'center' | 'right';
+  prefix?: string;
+  prefix_size_pt?: number;
+  prefix_color?: string;
   font_family: string;
   letter_spacing: string;
   bold?: boolean;

@@ -188,8 +188,28 @@ export async function renderTemplate(options: RenderOptions): Promise<string> {
     ctx.textAlign = textDef.align;
     ctx.textBaseline = 'middle';
 
+    // prefix 분리 렌더링 (left 정렬 + value가 prefix로 시작할 때)
+    if (textDef.align === 'left' && textDef.prefix && value.startsWith(textDef.prefix)) {
+      const prefixText = textDef.prefix;
+      const bodyText = value.substring(prefixText.length);
+
+      const prefixSizePx = textDef.prefix_size_pt
+        ? Math.max(8, Math.round(textDef.prefix_size_pt * 4.0))
+        : fontSizePx;
+      const prefixColor = textDef.prefix_color || textDef.color;
+      const prefixSpacing = getLetterSpacingPx(textDef.letter_spacing, prefixSizePx);
+
+      ctx.font = `${boldPrefix}${prefixSizePx}px ${fontFamily}`;
+      ctx.fillStyle = prefixColor;
+      drawTextWithSpacing(ctx, prefixText, x, y, prefixSpacing, 'left');
+      const prefixWidth = ctx.measureText(prefixText).width + prefixSpacing * Math.max(0, prefixText.length - 1);
+
+      ctx.font = `${boldPrefix}${fontSizePx}px ${fontFamily}`;
+      ctx.fillStyle = textDef.color;
+      drawTextWithSpacing(ctx, bodyText, x + prefixWidth, y, spacing, 'left');
+    }
     // '*' 기호가 있고 left 정렬이면 본문/노트 분리 렌더 (노트는 70% 크기)
-    if (textDef.align === 'left' && value.includes('*')) {
+    else if (textDef.align === 'left' && value.includes('*')) {
       const idx = value.indexOf('*');
       const main = value.substring(0, idx);
       const note = value.substring(idx);

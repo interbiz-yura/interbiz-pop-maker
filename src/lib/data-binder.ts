@@ -28,6 +28,8 @@ export function bindValue(name: string, data: CalculatedData): string {
     case '할인가':
     case '월구독료':
       return data.discountPrice > 0 ? formatNumber(data.discountPrice) : '0';
+    case '월할인':
+      return data.discountPrice >= 0 ? `월 ${formatNumber(data.discountPrice)}` : '';
     case '일구독':
       return data.dailyPrice > 0 ? `일 ${formatNumber(data.dailyPrice)}원` : '일 0원';
 
