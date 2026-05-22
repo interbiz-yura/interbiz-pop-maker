@@ -2,7 +2,8 @@
   "permissions": {
     "allow": [
       "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('./public/data/templates/template-index.json','utf8'\\)\\);console.log\\('JSON valid'\\)\")",
-      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('./public/data/templates/template-index.json','utf8'\\)\\);console.log\\('valid'\\)\")"
+      "Bash(node -e \"JSON.parse\\(require\\('fs'\\).readFileSync\\('./public/data/templates/template-index.json','utf8'\\)\\);console.log\\('valid'\\)\")",
+      "Bash(git mv *)"
     ]
   }
 }
