@@ -151,6 +151,7 @@ export interface CalculatedData {
   careContent02: string;
   careLabel03: string;
   careContent03: string;
+  discountPricePrepay: number;  // 선납+카드할인 후 월구독료
 }
 
 // ==========================================

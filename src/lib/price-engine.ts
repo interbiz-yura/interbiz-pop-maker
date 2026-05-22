@@ -234,6 +234,7 @@ export function calculatePatternB(
     careContent02: '',
     careLabel03: '',
     careContent03: '',
+    discountPricePrepay: 0,
   };
 }
 
@@ -288,6 +289,7 @@ export function calculatePatternA(
     careContent02: '',
     careLabel03: '',
     careContent03: '',
+    discountPricePrepay: 0,
   };
 }
 

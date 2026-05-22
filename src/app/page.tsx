@@ -976,6 +976,10 @@ export default function PopMakerPage() {
             careContent02: (careBenefitByProduct?.care_content_02 || '') + (careBenefitByProduct?.care_note_02 ? '  ' + careBenefitByProduct.care_note_02 : ''),
             careLabel03: careBenefitByProduct?.care_label_03 || '',
             careContent03: (careBenefitByProduct?.care_content_03 || '') + (careBenefitByProduct?.care_note_03 ? '  ' + careBenefitByProduct.care_note_03 : ''),
+            discountPricePrepay:
+              prepay === '30%' ? Math.max(0, (row.prepay30base || 0) - discountAmount)
+              : prepay === '50%' ? Math.max(0, (row.prepay50base || 0) - discountAmount)
+              : 0,
           };
 
         const values = bindAllValues(textNames, calcData);

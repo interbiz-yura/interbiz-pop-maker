@@ -30,6 +30,10 @@ export function bindValue(name: string, data: CalculatedData): string {
       return data.discountPrice > 0 ? formatNumber(data.discountPrice) : '0';
     case '월할인':
       return data.discountPrice >= 0 ? `월 ${formatNumber(data.discountPrice)}` : '';
+    case '월할인선납':
+      return data.discountPricePrepay > 0
+        ? `월 ${formatNumber(data.discountPricePrepay)}`
+        : data.discountPricePrepay === 0 ? '월 0' : '';
     case '일구독':
       return data.dailyPrice > 0 ? `일 ${formatNumber(data.dailyPrice)}원` : '일 0원';
 
