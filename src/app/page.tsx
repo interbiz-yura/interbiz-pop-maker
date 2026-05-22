@@ -324,6 +324,7 @@ export default function PopMakerPage() {
   // 템플릿 타입 판단
   const isPrepayTemplate = template.prepay === true;
   const isPrepayDetailTemplate = template.id?.includes('prepay-detail') || false;
+  const [isHybridTemplate, setIsHybridTemplate] = useState(false);
 
   const [showPrintDialog, setShowPrintDialog] = useState(false);
   const [printSize, setPrintSize] = useState<'기본' | 'A4' | 'A5' | 'A6' | '90x55'>('기본');
@@ -404,11 +405,13 @@ export default function PopMakerPage() {
 
 
   useEffect(() => {
-    if (!template.file) { setTemplateThumb(''); return; }
+    if (!template.file) { setTemplateThumb(''); setIsHybridTemplate(false); return; }
     (async () => {
       try {
         const res = await fetch(`/data/templates/${template.file}`);
         const json = await res.json();
+        // 하이브리드 템플릿 판별: texts에 '월할인선납' 키 존재 여부
+        setIsHybridTemplate(!!(json.texts && '월할인선납' in json.texts));
         console.log('[THUMB] keys:', Object.keys(json));
         console.log('[THUMB] has background_image:', !!json.background_image);
         console.log('[THUMB] format:', json.background_image_format);
@@ -976,9 +979,10 @@ export default function PopMakerPage() {
             careContent02: (careBenefitByProduct?.care_content_02 || '') + (careBenefitByProduct?.care_note_02 ? '  ' + careBenefitByProduct.care_note_02 : ''),
             careLabel03: careBenefitByProduct?.care_label_03 || '',
             careContent03: (careBenefitByProduct?.care_content_03 || '') + (careBenefitByProduct?.care_note_03 ? '  ' + careBenefitByProduct.care_note_03 : ''),
-            discountPricePrepay:
-              prepay === '30%' ? Math.max(0, (row.prepay30base || 0) - discountAmount)
-              : prepay === '50%' ? Math.max(0, (row.prepay50base || 0) - discountAmount)
+            discountPricePrepay: (isPrepayDetailTemplate || isHybridTemplate)
+              ? (prepay === '30%' ? Math.max(0, (row.prepay30base || 0) - discountAmount)
+                : prepay === '50%' ? Math.max(0, (row.prepay50base || 0) - discountAmount)
+                : 0)
               : 0,
           };
 
@@ -1431,7 +1435,7 @@ return (
                   onChange={() => setShowSuffix(!showSuffix)}
                 />
 
-                {isPrepayDetailTemplate && (
+                {(isPrepayDetailTemplate || isHybridTemplate) && (
                   <>
                     <div className="h-px bg-gray-100 my-1"></div>
                     <div>
