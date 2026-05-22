@@ -10,7 +10,7 @@
         0.967,
         0.0483
       ],
-      "font_size_pt": 15.0,
+      "font_size_pt": 15,
       "color": "#757574",
       "align": "right",
       "font_family": "Pretendard Medium",
@@ -21,7 +21,7 @@
         0.967,
         0.0771
       ],
-      "font_size_pt": 15.0,
+      "font_size_pt": 15,
       "color": "#757574",
       "align": "right",
       "font_family": "Pretendard Medium",
@@ -32,7 +32,7 @@
         0.5028,
         0.6279
       ],
-      "font_size_pt": 24.0,
+      "font_size_pt": 24,
       "color": "#666666",
       "align": "center",
       "font_family": "Pretendard Medium",
@@ -41,9 +41,9 @@
     "기본구독료": {
       "position_ratio": [
         0.5588,
-        0.2845
+        0.2995
       ],
-      "font_size_pt": 40.0,
+      "font_size_pt": 40,
       "color": "#545454",
       "align": "right",
       "font_family": "Pretendard SemiBold",
@@ -54,7 +54,7 @@
         0.9557,
         0.138
       ],
-      "font_size_pt": 12.0,
+      "font_size_pt": 12,
       "color": "#7F7F7F",
       "align": "right",
       "font_family": "Pretendard Medium",
@@ -65,7 +65,7 @@
         0.9556999999999999,
         0.1631
       ],
-      "font_size_pt": 12.0,
+      "font_size_pt": 12,
       "color": "#7F7F7F",
       "align": "right",
       "font_family": "Pretendard Medium",
@@ -76,7 +76,7 @@
         0.1296,
         0.7974
       ],
-      "font_size_pt": 20.0,
+      "font_size_pt": 20,
       "color": "#E51016",
       "align": "center",
       "font_family": "Pretendard ExtraBold",
@@ -87,7 +87,7 @@
         0.1296,
         0.8509
       ],
-      "font_size_pt": 20.0,
+      "font_size_pt": 20,
       "color": "#E51016",
       "align": "center",
       "font_family": "Pretendard ExtraBold",
@@ -98,7 +98,7 @@
         0.1296,
         0.9086
       ],
-      "font_size_pt": 20.0,
+      "font_size_pt": 20,
       "color": "#E51016",
       "align": "center",
       "font_family": "Pretendard ExtraBold",
@@ -109,7 +109,7 @@
         0.2552,
         0.7977
       ],
-      "font_size_pt": 16.0,
+      "font_size_pt": 16,
       "color": "#555555",
       "align": "left",
       "font_family": "Pretendard Medium",
@@ -120,7 +120,7 @@
         0.2552,
         0.8505
       ],
-      "font_size_pt": 16.0,
+      "font_size_pt": 16,
       "color": "#555555",
       "align": "left",
       "font_family": "Pretendard Medium",
@@ -131,7 +131,7 @@
         0.2552,
         0.9062
       ],
-      "font_size_pt": 16.0,
+      "font_size_pt": 16,
       "color": "#555555",
       "align": "left",
       "font_family": "Pretendard Medium",
@@ -142,7 +142,7 @@
         0.6899,
         0.2977
       ],
-      "font_size_pt": 22.0,
+      "font_size_pt": 20,
       "color": "#FFFFFF",
       "align": "center",
       "font_family": "Pretendard Medium",
@@ -153,22 +153,28 @@
         0.3994,
         0.5182
       ],
-      "font_size_pt": 48.0,
+      "font_size_pt": 48,
       "color": "#494949",
       "align": "right",
       "font_family": "HY견고딕",
-      "letter_spacing": "보통"
+      "letter_spacing": "보통",
+      "prefix": "월 ",
+      "prefix_size_pt": 24,
+      "prefix_color": "#494949"
     },
     "월할인선납": {
       "position_ratio": [
         0.8288,
         0.5182
       ],
-      "font_size_pt": 48.0,
+      "font_size_pt": 48,
       "color": "#FF0000",
       "align": "right",
       "font_family": "HY견고딕",
-      "letter_spacing": "보통"
+      "letter_spacing": "보통",
+      "prefix": "월 ",
+      "prefix_size_pt": 24,
+      "prefix_color": "#FF0000"
     }
   },
   "image_size": "A4",
@@ -187,8 +193,8 @@
   "batch_enabled": false,
   "batch_settings": {
     "paper_orientation": "가로",
-    "item_width_mm": 148.0,
-    "item_height_mm": 105.0,
+    "item_width_mm": 148,
+    "item_height_mm": 105,
     "grid_cols": 2,
     "grid_rows": 2
   },
