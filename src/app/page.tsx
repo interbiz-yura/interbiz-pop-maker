@@ -283,7 +283,7 @@ export default function PopMakerPage() {
   const [activationOn, setActivationOn] = useState(false);
   const [qrOn, setQrOn] = useState(true);
   const [showSuffix, setShowSuffix] = useState(false);
-  const [prepay, setPrepay] = useState('없음');
+  const [prepay, setPrepay] = useState('30%');
   const [activeCategory, setActiveCategory] = useState('전체');
   const [searchQuery, setSearchQuery] = useState('');
   const [checkedModels, setCheckedModels] = useState<Set<string>>(new Set());
@@ -1445,7 +1445,6 @@ return (
                         onChange={(e) => setPrepay(e.target.value)}
                         className="w-full p-2.5 rounded-lg border border-gray-200 text-sm bg-gray-50 outline-none cursor-pointer text-slate-700"
                       >
-                        {!isPrepayDetailTemplate && <option value="없음">미선택</option>}
                         <option value="30%">30% 선납</option>
                         <option value="50%">50% 선납</option>
                       </select>
