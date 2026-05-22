@@ -41,7 +41,7 @@
     "기본구독료": {
       "position_ratio": [
         0.5588,
-        0.2995
+        0.2987
       ],
       "font_size_pt": 40,
       "color": "#545454",
@@ -159,7 +159,7 @@
       "font_family": "HY견고딕",
       "letter_spacing": "보통",
       "prefix": "월 ",
-      "prefix_size_pt": 24,
+      "prefix_size_pt": 26,
       "prefix_color": "#494949"
     },
     "월할인선납": {
@@ -173,7 +173,7 @@
       "font_family": "HY견고딕",
       "letter_spacing": "보통",
       "prefix": "월 ",
-      "prefix_size_pt": 24,
+      "prefix_size_pt": 26,
       "prefix_color": "#FF0000"
     }
   },
