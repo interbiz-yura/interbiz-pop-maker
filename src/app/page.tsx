@@ -134,6 +134,8 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
   for (let r = 1; r <= range.e.r; r++) {
     const model = str(r, 1); // B열 = 모델명
     if (!model) continue;
+    // 구조4: 소상공인구분 열이 비어있지 않은 행(1대/2대이상/4대이상)은 제외, 일반 행만 사용
+    if (soOffset === 1 && str(r, 6 + colOffset + 1)) continue;
     entries.push({
       row: r,
       category: str(r, 0),    // A열

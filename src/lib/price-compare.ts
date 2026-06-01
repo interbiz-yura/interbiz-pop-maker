@@ -137,6 +137,8 @@ export async function parseNewExcelForCompare(url: string, sheetName: string): P
   for (let r = 1; r <= range.e.r; r++) {
     const model = str(r, 1);
     if (!model) continue;
+    // 구조4: 소상공인구분 열이 비어있지 않은 행은 제외 (일반 행만)
+    if (soOffset === 1 && str(r, 6 + colOffset + 1)) continue;
     entries.push({
       model,
       category: str(r, 0),
