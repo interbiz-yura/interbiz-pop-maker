@@ -110,11 +110,14 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
   const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
   const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
 
-  // 헤더 C열(0-indexed: 2)이 "H"이면 구조3 (B열 뒤에 H/O 컬럼 추가됨) → colOffset=2
+  // 헤더 C열(0-indexed: 2)이 "H"이면 구조3+ (B열 뒤에 H/O 컬럼 추가됨) → colOffset=2
   const headerC = str(0, 2).toUpperCase();
   const colOffset = headerC === 'H' ? 2 : 0;
-  // 헤더 I열(0-indexed: 8) 위치(colOffset 적용)에서 "가전단품" 확인 → offset=1
-  const headerAppliance = str(0, 8 + colOffset).replace(/\s/g, '');
+  // 결합유형 다음 열에 "소상공인"이 있으면 구조4 → soOffset=1
+  const headerAfterCombo = str(0, 6 + colOffset + 1).replace(/\s/g, '');
+  const soOffset = headerAfterCombo.includes('소상공인') ? 1 : 0;
+  // 기준가 다음 열에서 "가전단품" 확인 → offset=1
+  const headerAppliance = str(0, 8 + colOffset + soOffset).replace(/\s/g, '');
   const offset = headerAppliance === '가전단품' ? 1 : 0;
 
   // 1행부터 데이터 (0행은 헤더)
@@ -140,14 +143,14 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       visitCycle: str(r, 4 + colOffset),
       period: num(r, 5 + colOffset),
       comboType: str(r, 6 + colOffset),
-      listPrice: num(r, 7 + colOffset),
-      applianceSingle: offset === 1 ? num(r, 8 + colOffset) : 0,
-      activation: num(r, 10 + offset + colOffset),
-      finalPrice: num(r, 11 + offset + colOffset),
-      prepay30amount: num(r, 12 + offset + colOffset),
-      prepay30final: num(r, 13 + offset + colOffset),
-      prepay50amount: num(r, 14 + offset + colOffset),
-      prepay50final: num(r, 15 + offset + colOffset),
+      listPrice: num(r, 7 + colOffset + soOffset),
+      applianceSingle: offset === 1 ? num(r, 8 + colOffset + soOffset) : 0,
+      activation: num(r, 10 + offset + colOffset + soOffset),
+      finalPrice: num(r, 11 + offset + colOffset + soOffset),
+      prepay30amount: num(r, 12 + offset + colOffset + soOffset),
+      prepay30final: num(r, 13 + offset + colOffset + soOffset),
+      prepay50amount: num(r, 14 + offset + colOffset + soOffset),
+      prepay50final: num(r, 15 + offset + colOffset + soOffset),
     });
   }
 

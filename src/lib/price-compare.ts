@@ -122,11 +122,14 @@ export async function parseNewExcelForCompare(url: string, sheetName: string): P
   const num = (r: number, c: number) => { const v = cell(r, c); return typeof v === 'number' ? v : (parseInt(String(v)) || 0); };
   const str = (r: number, c: number) => { const v = cell(r, c); return v != null ? String(v).trim() : ''; };
 
-  // 헤더 C열이 "H"이면 구조3 (B열 뒤에 H/O 컬럼 추가됨) → colOffset=2
+  // 헤더 C열이 "H"이면 구조3+ → colOffset=2
   const headerC = str(0, 2).toUpperCase();
   const colOffset = headerC === 'H' ? 2 : 0;
-  // 헤더 I열 위치(colOffset 적용)에서 "가전단품" 확인 → offset=1
-  const headerAppliance = str(0, 8 + colOffset).replace(/\s/g, '');
+  // 결합유형 다음 열에 "소상공인"이 있으면 구조4 → soOffset=1
+  const headerAfterCombo = str(0, 6 + colOffset + 1).replace(/\s/g, '');
+  const soOffset = headerAfterCombo.includes('소상공인') ? 1 : 0;
+  // 기준가 다음 열에서 "가전단품" 확인 → offset=1
+  const headerAppliance = str(0, 8 + colOffset + soOffset).replace(/\s/g, '');
   const offset = headerAppliance === '가전단품' ? 1 : 0;
 
   interface Entry { model: string; category: string; careType: string; careGrade: string; visitCycle: string; period: number; comboType: string; finalPrice: number; }
@@ -142,7 +145,7 @@ export async function parseNewExcelForCompare(url: string, sheetName: string): P
       visitCycle: str(r, 4 + colOffset),
       period: num(r, 5 + colOffset),
       comboType: str(r, 6 + colOffset),
-      finalPrice: num(r, 11 + offset + colOffset),
+      finalPrice: num(r, 11 + offset + colOffset + soOffset),
     });
   }
 
