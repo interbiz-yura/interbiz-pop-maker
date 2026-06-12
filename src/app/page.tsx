@@ -146,7 +146,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       period: num(r, 5 + colOffset),
       comboType: str(r, 6 + colOffset),
       listPrice: num(r, 7 + colOffset + soOffset),
-      applianceSingle: offset === 1 ? num(r, 8 + colOffset + soOffset) : 0,
+      applianceSingle: offset === 1 ? num(r, 8 + colOffset + soOffset) : num(r, 7 + colOffset + soOffset),
       activation: num(r, 10 + offset + colOffset + soOffset),
       finalPrice: num(r, 11 + offset + colOffset + soOffset),
       prepay30amount: num(r, 12 + offset + colOffset + soOffset),
