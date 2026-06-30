@@ -195,7 +195,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
     // 신규 양식(0630~) 정률 선납 계산
     let calc30amount = 0, calc30monthly = 0, calc50amount = 0, calc50monthly = 0;
     if (isPrepayNew && y6none) {
-      const fp = y6none.finalPrice || 0;
+      const fp = (y6none.finalPrice || 0) + (y6none.activation || 0);
       const act = y6none.activation || 0;
       const can30 = y6none.prepayType?.includes('30') || false;
       const can50 = y6none.prepayType?.includes('50') || false;
