@@ -30,6 +30,8 @@ export interface PriceRow {
   prepay50new: number;    // AB열 - 50% 신규결합
   prepay50exist: number;  // AC열 - 50% 기존결합
   applianceSingle: number; // 가전단품 가격 (신규 양식 I열)
+  prepayFixedMin: number;  // 정액 선납 최소 금액 (0630~ 양식)
+  prepayFixedMax: number;  // 정액 선납 최대 금액 (0630~ 양식)
 }
 
 // ==========================================
