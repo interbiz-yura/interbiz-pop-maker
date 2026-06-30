@@ -83,6 +83,8 @@ async function parseExcelFromURL(url: string, sheetName: string): Promise<PriceR
       prepay30amount: num(21), prepay30base: num(22), prepay30new: num(23), prepay30exist: num(24),
       prepay50amount: num(25), prepay50base: num(26), prepay50new: num(27), prepay50exist: num(28),
       applianceSingle: 0,
+      prepayFixedMin: 0,
+      prepayFixedMax: 0,
     });
   }
   return rows;
@@ -119,6 +121,10 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
   // 기준가 다음 열에서 "가전단품" 확인 → offset=1
   const headerAppliance = str(0, 8 + colOffset + soOffset).replace(/\s/g, '');
   const offset = headerAppliance === '가전단품' ? 1 : 0;
+  // 선납 열(기존 prepay30amount 위치)의 헤더가 "정률" 또는 "가능" 포함 → 신규 선납 구조 (0630~)
+  const prepayHeaderIdx = 12 + offset + colOffset + soOffset;
+  const headerPrepay = str(0, prepayHeaderIdx).replace(/\s/g, '');
+  const isPrepayNew = headerPrepay.includes('정률') || headerPrepay.includes('가능');
 
   // 1행부터 데이터 (0행은 헤더)
   interface RawEntry {
@@ -128,6 +134,7 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
     listPrice: number; applianceSingle: number; finalPrice: number; activation: number;
     prepay30amount: number; prepay30final: number;
     prepay50amount: number; prepay50final: number;
+    prepayType: string; prepayMin: number; prepayMax: number;
   }
 
   const entries: RawEntry[] = [];
@@ -149,10 +156,13 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       applianceSingle: offset === 1 ? num(r, 8 + colOffset + soOffset) : num(r, 7 + colOffset + soOffset),
       activation: num(r, 10 + offset + colOffset + soOffset),
       finalPrice: num(r, 11 + offset + colOffset + soOffset),
-      prepay30amount: num(r, 12 + offset + colOffset + soOffset),
-      prepay30final: num(r, 13 + offset + colOffset + soOffset),
-      prepay50amount: num(r, 14 + offset + colOffset + soOffset),
-      prepay50final: num(r, 15 + offset + colOffset + soOffset),
+      prepay30amount: isPrepayNew ? 0 : num(r, 12 + offset + colOffset + soOffset),
+      prepay30final:  isPrepayNew ? 0 : num(r, 13 + offset + colOffset + soOffset),
+      prepay50amount: isPrepayNew ? 0 : num(r, 14 + offset + colOffset + soOffset),
+      prepay50final:  isPrepayNew ? 0 : num(r, 15 + offset + colOffset + soOffset),
+      prepayType: isPrepayNew ? str(r, 12 + offset + colOffset + soOffset) : '',
+      prepayMin:  isPrepayNew ? num(r, 13 + offset + colOffset + soOffset) : 0,
+      prepayMax:  isPrepayNew ? num(r, 14 + offset + colOffset + soOffset) : 0,
     });
   }
 
@@ -182,6 +192,23 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       });
     }
 
+    // 신규 양식(0630~) 정률 선납 계산
+    let calc30amount = 0, calc30monthly = 0, calc50amount = 0, calc50monthly = 0;
+    if (isPrepayNew && y6none) {
+      const fp = y6none.finalPrice || 0;
+      const act = y6none.activation || 0;
+      const can30 = y6none.prepayType?.includes('30') || false;
+      const can50 = y6none.prepayType?.includes('50') || false;
+      if (can30) {
+        calc30amount = Math.floor(fp * 72 * 0.3 / 100) * 100;
+        calc30monthly = Math.max(0, Math.floor((fp * 72 - calc30amount * 1.135) / 72 / 100) * 100 - act);
+      }
+      if (can50) {
+        calc50amount = Math.floor(fp * 72 * 0.5 / 100) * 100;
+        calc50monthly = Math.max(0, Math.floor((fp * 72 - calc50amount * 1.135) / 72 / 100) * 100 - act);
+      }
+    }
+
     rows.push({
       channel: '',
       category: first.category,
@@ -202,15 +229,17 @@ async function parseNewExcel(url: string, sheetName: string): Promise<PriceRow[]
       y6base: y6none?.finalPrice || 0,
       y6new: 0,
       y6exist: 0,
-      prepay30amount: y6none?.prepay30amount || 0,
-      prepay30base:   y6none?.prepay30final || 0,
+      prepay30amount: isPrepayNew ? calc30amount : (y6none?.prepay30amount || 0),
+      prepay30base:   isPrepayNew ? calc30monthly : (y6none?.prepay30final || 0),
       prepay30new: 0,
       prepay30exist: 0,
-      prepay50amount: y6none?.prepay50amount || 0,
-      prepay50base:   y6none?.prepay50final || 0,
+      prepay50amount: isPrepayNew ? calc50amount : (y6none?.prepay50amount || 0),
+      prepay50base:   isPrepayNew ? calc50monthly : (y6none?.prepay50final || 0),
       prepay50new: 0,
       prepay50exist: 0,
       applianceSingle: y6none?.applianceSingle || y5none?.applianceSingle || y4none?.applianceSingle || y3none?.applianceSingle || 0,
+      prepayFixedMin: isPrepayNew ? (y6none?.prepayMin || 0) : 0,
+      prepayFixedMax: isPrepayNew ? (y6none?.prepayMax || 0) : 0,
     });
   });
   return rows;
