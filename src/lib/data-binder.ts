@@ -83,16 +83,9 @@ export function bindValue(name: string, data: CalculatedData): string {
           if (data.discountPrice <= 0) return '';
           const msg = data.cardMessage || '';
           if (msg.includes('KB국민')) {
-            // KB국민: 1~60개월 + 61~72개월 (할인액 감소)
-            const late = data.discountPrice + data.discountAmount - (data.discountAmount <= 17000 ? 10000 : 15000);
-            const total = data.discountPrice * 60 + late * 12;
-            return `${formatNumber(total)}원`;
-          }
-          if (msg.includes('현대')) {
-            // 현대: 1~60개월 + 61~72개월 (할인액 감소)
-            const lateDiscount = data.discountAmount === 15000 ? 8000 : data.discountAmount === 17000 ? 12000 : 16000;
-            const late = data.discountPrice + data.discountAmount - lateDiscount;
-            const total = data.discountPrice * 60 + late * 12;
+            // KB국민: 1~36개월 + 37~72개월 (할인액 감소)
+            const late = data.discountPrice + data.discountAmount - (data.discountAmount <= 20000 ? 10000 : 15000);
+            const total = data.discountPrice * 36 + late * 36;
             return `${formatNumber(total)}원`;
           }
           return `${formatNumber(data.discountPrice * 72)}원`;
