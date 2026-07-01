@@ -65,35 +65,35 @@
   {
     "cardName": "[KB국민]LG전자",
     "monthUsage": "30만",
-    "discountAmount": 17000,
+    "discountAmount": 20000,
     "message": "※ KB국민 제휴카드 프로모션 적용, 월 30만원 이상 사용 시",
     "order": 1
   },
   {
     "cardName": "[KB국민]LG전자",
     "monthUsage": "80만",
-    "discountAmount": 22000,
+    "discountAmount": 25000,
     "message": "※ KB국민 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
     "order": 2
   },
   {
     "cardName": "[현대]LG전자",
     "monthUsage": "40만",
-    "discountAmount": 15000,
+    "discountAmount": 8000,
     "message": "※ 현대 제휴카드 프로모션 적용, 월 40만원 이상 사용 시",
     "order": 1
   },
   {
     "cardName": "[현대]LG전자",
     "monthUsage": "80만",
-    "discountAmount": 17000,
+    "discountAmount": 12000,
     "message": "※ 현대 제휴카드 프로모션 적용, 월 80만원 이상 사용 시",
     "order": 2
   },
   {
     "cardName": "[현대]LG전자",
     "monthUsage": "120만",
-    "discountAmount": 19000,
+    "discountAmount": 16000,
     "message": "※ 현대 제휴카드 프로모션 적용, 월 120만원 이상 사용 시",
     "order": 3
   },
