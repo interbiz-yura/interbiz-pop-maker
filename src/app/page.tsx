@@ -889,7 +889,7 @@ export default function PopMakerPage() {
   }, [activeCategory]);
 
   useEffect(() => {
-    const filtered = templates.filter(t => t.channel?.includes(channel.id));
+    const filtered = templates.filter(t => t.id?.startsWith('new26-hmh-') && t.channel?.includes(channel.id));
     if (filtered.length > 0) setTemplate(filtered[0]);
   }, [channel, templates]);
 
@@ -1382,7 +1382,7 @@ return (
                     className="w-full p-2.5 rounded-lg border border-gray-200 text-sm font-semibold bg-gray-50 outline-none cursor-pointer focus:ring-2 focus:ring-slate-500/20 transition-all text-slate-700"
                   >
                     {templates
-                      .filter((t: any) => t.channel?.includes(channel.id))
+                      .filter((t: any) => t.id?.startsWith('new26-hmh-') && t.channel?.includes(channel.id))
                       .map((t: any) => (
                         <option key={t.id} value={t.id}>{t.name}</option>
                       ))}
