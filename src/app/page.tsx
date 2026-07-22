@@ -315,6 +315,7 @@ export default function PopMakerPage() {
   const [cardName, setCardName] = useState('[신한]더구독케어');
   const [monthUsage, setMonthUsage] = useState('30만');
   const [activationOn, setActivationOn] = useState(false);
+  const [showEolNotice, setShowEolNotice] = useState(true);
   const [qrOn, setQrOn] = useState(true);
   const [showSuffix, setShowSuffix] = useState(false);
   const [prepay, setPrepay] = useState('30%');
@@ -1333,6 +1334,7 @@ export default function PopMakerPage() {
 
 return (
     <div className="min-h-screen flex flex-col bg-[#F8F9FA] font-sans">
+      {showEolNotice && <EolNoticeModal onClose={() => setShowEolNotice(false)} />}
       {/* 상단 헤더 */}
       <header className="bg-white border-b border-gray-200 px-7 h-16 flex items-center justify-between shrink-0">
         <div className="flex items-center gap-3">
@@ -1982,6 +1984,47 @@ return (
 // ==========================================
 // 하위 컴포넌트
 // ==========================================
+function EolNoticeModal({ onClose }: { onClose: () => void }) {
+  return (
+    <div
+      className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/50 px-4"
+      onClick={onClose}
+    >
+      <div
+        className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center gap-2 mb-3">
+          <span className="w-2 h-2 rounded-full bg-[#A50034]" />
+          <span className="text-xs font-bold text-[#A50034]">서비스 종료 안내</span>
+        </div>
+        <h2 className="text-lg font-extrabold text-slate-800 mb-2">
+          LG POP Maker 서비스가 종료됩니다
+        </h2>
+        <p className="text-sm text-slate-600 leading-relaxed mb-4">
+          2025년 7월 22일부터 이 페이지는 가격표와 정보를 더 이상
+          업데이트하지 않습니다. 앞으로는 아래 페이지에서 가격표를
+          출력해 주세요.
+        </p>
+        <a
+          href="https://lgeup.com/9pop"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block text-center bg-[#A50034] text-white font-bold text-sm py-3 rounded-xl mb-3 hover:bg-[#8a002c] transition-colors"
+        >
+          새 페이지로 이동 (lgeup.com/9pop)
+        </a>
+        <button
+          onClick={onClose}
+          className="w-full text-center text-slate-500 text-sm py-2 hover:text-slate-700 transition-colors"
+        >
+          닫기
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Panel({ title, children }: any) {
   return (
     <div className="bg-white rounded-2xl p-5 shadow-sm border border-gray-200">
