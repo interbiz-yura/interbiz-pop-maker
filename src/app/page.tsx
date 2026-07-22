@@ -2002,7 +2002,7 @@ function EolNoticeModal({ onClose }: { onClose: () => void }) {
           LG POP Maker 서비스가 종료됩니다
         </h2>
         <p className="text-sm text-slate-600 leading-relaxed mb-4">
-          2025년 7월 22일부터 이 페이지는 가격표와 정보를 더 이상
+          2026년 7월 22일부터 이 페이지는 가격표와 정보를 더 이상
           업데이트하지 않습니다. 앞으로는 아래 페이지에서 가격표를
           출력해 주세요.
         </p>
